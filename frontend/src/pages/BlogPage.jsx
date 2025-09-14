@@ -37,7 +37,7 @@ export const BlogPage = () => {
     if (!profile?._id) {
       console.log("can not delete yet");
     }
-    try {
+    try { 
       const res = await axios.post(
         `${BASE_URL}/reply/delete-reply`,
         {
@@ -109,7 +109,7 @@ export const BlogPage = () => {
               {reply.replyBody}
               <button
                 onClick={() => deleteReplyHandler(reply._id)}
-                disabled={!profile._id}
+                
               >
                 delete this reply!
               </button>

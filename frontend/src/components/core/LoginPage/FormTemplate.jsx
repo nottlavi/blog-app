@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setEmail as setAuthEmail } from "../../../slices/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../../../slices/authSlice";
 import { LoadingPage } from "../../../pages/LoadingPage";
+import { setProfile } from "../../../slices/authSlice";
 
 export const FormTemplate = ({ type }) => {
   const [email, setEmail] = useState("");
@@ -17,6 +18,7 @@ export const FormTemplate = ({ type }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const dispatch = useDispatch();
   const [loading, setLoading] = useState("");
+  const token = useSelector((state) => state.auth.token);
 
   const logInHandler = async (e) => {
     e.preventDefault();
@@ -31,15 +33,35 @@ export const FormTemplate = ({ type }) => {
         { withCredentials: true }
       );
       if (res) {
+        fetchProfile();
         dispatch(setAuthEmail(res.data.email));
         dispatch(setToken(res.data.token));
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("email", res.data.email);
+        fetchProfile();
         navigate("/");
       }
     } catch (err) {
       if (err.response) {
         setLoading(false);
+        console.log(err.response);
+      } else {
+        console.log("something went wrong");
+      }
+    }
+  };
+
+  const fetchProfile = async (email) => {
+    try {
+      const res = await axios.get(`${BASE_URL}/user/profile`, {
+        withCredentials: true,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (res) {
+        dispatch(setProfile(res.data.data));
+      }
+    } catch (err) {
+      if (err.response) {
         console.log(err.response);
       } else {
         console.log("something went wrong");

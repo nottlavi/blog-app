@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearProfile, clearToken } from "../../slices/authSlice";
+import { clearEmail, clearProfile, clearToken } from "../../slices/authSlice";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 
@@ -10,15 +10,21 @@ export const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  //rl
+  console.log("printing token here: ", token);
 
   const logOutHandler = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/logout`, {
         withCredentials: true,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-      localStorage.clear();
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("profile");
       dispatch(clearToken());
       dispatch(clearProfile());
+      dispatch(clearEmail());
       navigate("/");
     } catch (err) {
       console.log("something went wrong");

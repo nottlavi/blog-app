@@ -8,38 +8,17 @@ import { setProfile } from "../slices/authSlice";
 
 export const HomePage = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  //this token was setup on login page
+  //below three values were setup on login page
   const token = useSelector((state) => state.auth.token);
-  const dispatch = useDispatch();
   const profile = useSelector((state) => state.auth.profile);
-
   const email = useSelector((state) => state.auth.email);
+  //setting the profile in local storage because redux-store resets to initial state on reload
 
   useEffect(() => {
-    const fetchProfile = async (email) => {
-      try {
-        const res = await axios.get(`${BASE_URL}/user/profile`, {
-          withCredentials: true,
-        });
-        if (res) {
-          dispatch(setProfile(res.data.data));
-        }
-      } catch (err) {
-        if (err.response) {
-          console.log(err.response);
-        } else {
-          console.log("something went wrong");
-        }
-      }
-    };
-    fetchProfile(email);
-  }, []);
-
-  // useEffect(() => {
-  //   if (email && token) {
-  //     fetchProfile(email);
-  //   }
-  // }, [email, token]);
+    if (profile && profile._id) {
+      localStorage.setItem("profile", JSON.stringify(profile));
+    }
+  }, [profile]);
 
   return (
     <div>

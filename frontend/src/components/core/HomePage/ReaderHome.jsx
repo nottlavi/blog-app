@@ -1,6 +1,7 @@
 import React, { useDeferredValue, useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export const ReaderHome = () => {
   const profile = useSelector((state) => state.auth.profile);
@@ -30,10 +31,12 @@ export const ReaderHome = () => {
       <p>hello {profile.firstName}</p>
       {blogs.map((blog, idx) => {
         return (
-          <div key={idx}>
-            {blog.blogTitle}
-            {blog.blogBody}
-          </div>
+          <Link to={`/blog/${blog._id}`}>
+            <div key={idx}>
+              {blog.blogTitle}
+              {blog.blogBody}
+            </div>
+          </Link>
         );
       })}
     </div>

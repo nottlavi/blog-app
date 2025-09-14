@@ -9,18 +9,21 @@ import { NotFound } from "./pages/NotFound";
 import { NavBar } from "./components/common/NavBar";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setEmail, setToken } from "./slices/authSlice";
+import { setEmail, setProfile, setToken } from "./slices/authSlice";
 import { BlogPage } from "./pages/BlogPage";
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
+    //checked it, the token is valid and im getting it
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
+    const profile = JSON.parse(localStorage.getItem("profile"));
 
-    if (token && email) {
+    if (token && email && profile) {
       dispatch(setEmail(email));
       dispatch(setToken(token));
+      dispatch(setProfile(profile))
     }
   }, []);
 
