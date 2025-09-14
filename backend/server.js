@@ -4,6 +4,7 @@ const userRoutes = require("./routes/userRoutes");
 const cookieParser = require("cookie-parser");
 const { connect } = require("./config/database");
 const blogRoutes = require("./routes/blogRoutes");
+const replyRoutes = require("./routes/replyRoutes");
 const cors = require("cors");
 
 const app = express();
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/blog", blogRoutes);
+app.use("/api/v1/reply", replyRoutes)
 
 app.listen(PORT, () => {
   console.log("server started on port: ", PORT);

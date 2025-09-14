@@ -31,8 +31,10 @@ export const FormTemplate = ({ type }) => {
         { withCredentials: true }
       );
       if (res) {
-        console.log(res);
+        dispatch(setAuthEmail(res.data.email));
         dispatch(setToken(res.data.token));
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("email", res.data.email);
         navigate("/");
       }
     } catch (err) {

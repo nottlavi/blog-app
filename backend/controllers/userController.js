@@ -227,6 +227,7 @@ exports.login = async (req, res) => {
       success: true,
       message: "user logged in with following token",
       token: token,
+      email: email,
     });
   } catch (err) {
     return res.status(500).json({

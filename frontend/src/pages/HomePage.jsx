@@ -1,45 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { CreatorHome } from "../components/core/HomePage/CreatorHome";
 import { GuestHome } from "../components/core/HomePage/GuestHome";
 import { ReaderHome } from "../components/core/HomePage/ReaderHome";
 import axios from "axios";
+import { setProfile } from "../slices/authSlice";
 
 export const HomePage = () => {
-  const [role, setRole] = useState("");
-  const [profile, setProfile] = useState({});
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-  const fetchProfile = async (email) => {
-    try {
-      const res = await axios.get(`${BASE_URL}/user/profile`, {
-        withCredentials: true,
-      });
-      if (res) {
-        setProfile(res.data.data);
-        setRole(res.data.data.role);
-      }
-    } catch (err) {
-      if (err.response) {
-        console.log(err.response);
-      } else {
-        console.log("something went wrong");
-      }
-    }
-  };
+  //this token was setup on login page
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.auth.profile);
 
   const email = useSelector((state) => state.auth.email);
 
   useEffect(() => {
+    const fetchProfile = async (email) => {
+      try {
+        const res = await axios.get(`${BASE_URL}/user/profile`, {
+          withCredentials: true,
+        });
+        if (res) {
+          dispatch(setProfile(res.data.data));
+        }
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response);
+        } else {
+          console.log("something went wrong");
+        }
+      }
+    };
     fetchProfile(email);
-  }, [email]);
+  }, []);
+
+  // useEffect(() => {
+  //   if (email && token) {
+  //     fetchProfile(email);
+  //   }
+  // }, [email, token]);
 
   return (
     <div>
-      {role === "Creator" ? (
-        <CreatorHome profile={profile} />
-      ) : role === "Reader" ? (
-        <ReaderHome profile={profile} />
+      {profile?.role === "Creator" ? (
+        <CreatorHome />
+      ) : profile?.role === "Reader" ? (
+        <ReaderHome />
       ) : (
         <GuestHome />
       )}

@@ -21,6 +21,12 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  replies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "replyModel",
+    },
+  ],
 });
 
 const blogModel = mongoose.model("blogModel", blogSchema);

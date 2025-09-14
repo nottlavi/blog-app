@@ -1,15 +1,72 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { setProfile } from "../../../slices/authSlice";
+import { Link } from "react-router-dom";
 
-export const CreatorHome = ({ profile }) => {
-  const userBlogs = profile.blogs;
+export const CreatorHome = () => {
+  //import profile from redux
+  const profile = useSelector((state) => state.auth.profile);
+  const userBlogs = profile?.blogs || [];
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [blogTitle, setBlogTitle] = useState("");
   const [blogDescription, setBlogDescription] = useState("");
   const [blogBody, setBlogBody] = useState("");
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  const createBlogHandler = async(e) => {
+  const createBlogHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/blog/create-blog`,
+        {
+          blogTitle,
+          createdAt: Date.now(),
+          author: profile._id,
+          blogDescription,
+          blogBody,
+        },
+        { withCredentials: true }
+      );
+      if (res) {
+        setBlogTitle("");
+        setBlogBody("");
+        setBlogDescription("");
+        fetchBlogsByUser();
+      }
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response);
+      } else {
+        console.log("something went wrong");
+      }
+    }
+  };
 
-  }
+  const fetchBlogsByUser = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${BASE_URL}/user/profile`, {
+        withCredentials: true,
+      });
+      if (res?.data?.data) {
+        dispatch(setProfile(res.data.data));
+      }
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response);
+      } else {
+        console.log("something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (profile?._id) fetchBlogsByUser();
+  }, [profile?._id]);
 
   return (
     <div>
@@ -18,7 +75,11 @@ export const CreatorHome = ({ profile }) => {
       {/* div for all the blogs by the user */}
       <div>
         {userBlogs.map((blog, idx) => {
-          return <div key={idx}>{blog.blogTitle}</div>;
+          return (
+            <Link to={`/blog/${blog._id}`} key={idx}>
+              <div >{blog.blogTitle}</div>
+            </Link>
+          );
         })}
       </div>
       {/* div to create a blog */}
@@ -70,6 +131,7 @@ export const CreatorHome = ({ profile }) => {
               }}
             />
           </div>
+          <button type="submit">publish blog</button>
         </form>
       </div>
     </div>

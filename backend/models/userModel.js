@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
       ref: "blogModel",
     },
   ],
+  replies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "replyModel",
+    },
+  ],
   role: {
     type: String,
     required: true,

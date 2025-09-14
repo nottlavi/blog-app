@@ -2,7 +2,8 @@ import React, { useDeferredValue, useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-export const ReaderHome = ({ profile }) => {
+export const ReaderHome = () => {
+  const profile = useSelector((state) => state.auth.profile);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [blogs, setBlogs] = useState([]);
   useEffect(() => {

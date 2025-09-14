@@ -63,11 +63,38 @@ exports.createBlog = async (req, res) => {
 //   }
 // };
 
+exports.getBlogById = async (req, res) => {
+  try {
+    //fetching info from call
+    const { blogId } = req.query;
+
+    //fetching blog entry from db
+    const blogEntry = await blogModel.findById(blogId).populate("author").populate("replies");
+
+    if (!blogEntry) {
+      return res.status(400).json({
+        success: false,
+        message: "success false",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      blog: blogEntry,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 exports.getAllBlogs = async (req, res) => {
   try {
     const allBlogs = await blogModel.find({}).populate("author");
     return res.status(200).json({
-      success: false,
+      success: true,
       message: " all blogs fetched across all the users fetched successfully",
       blogs: allBlogs,
     });
