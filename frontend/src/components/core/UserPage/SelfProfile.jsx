@@ -5,5 +5,7 @@ export const SelfProfile = () => {
   //looading imp info from redux
   const profile = useSelector((state) => state.auth.profile);
 
-  return <div></div>;
+  return <div>
+    
+  </div>;
 };

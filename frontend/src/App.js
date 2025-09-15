@@ -30,7 +30,7 @@ function App() {
 
   return (
     //make sure to remove this className pre styling
-    <div className="text-white bg-black h-auto">
+    <div className="text-white bg-black min-h-screen">
       <NavBar />
       <Routes>
         <Route path="/" element={<HomePage />} />
