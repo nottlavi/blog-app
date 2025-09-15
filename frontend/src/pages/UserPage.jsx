@@ -9,10 +9,10 @@ export const UserPage = () => {
   //this email will be used to verify if the logged in user is viewing their own profile
   const email = useSelector((state) => state.auth.email);
 
+
+
   return (
-    <div>
-      hello {profile.firstName}
-      {email === profile.email ? <SelfProfile /> : <OtherProfile />}
-    </div>
+    //this shit will always match
+    <div>{email === profile.email ? <SelfProfile /> : <OtherProfile />}</div>
   );
 };

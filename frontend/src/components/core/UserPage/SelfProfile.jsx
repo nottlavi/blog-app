@@ -4,8 +4,9 @@ import { useSelector } from "react-redux";
 export const SelfProfile = () => {
   //looading imp info from redux
   const profile = useSelector((state) => state.auth.profile);
+  console.log("im here")
 
   return <div>
-    
+    hello {profile.firstName}
   </div>;
 };
