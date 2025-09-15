@@ -10,6 +10,7 @@ const {
   getProfile,
   logOut,
   followUser,
+  getUserById,
 } = require("../controllers/userController");
 
 const { verifyToken } = require("../middlewares/userMiddlewares");
@@ -21,6 +22,7 @@ router.post("/resend-otp", resendOTP);
 router.get("/profile", verifyToken, getProfile);
 router.get("/logout", verifyToken, logOut);
 router.post("/follow-user", verifyToken, followUser);
+router.get("/get-user-by-id", getUserById);
 
 //for development purpose only
 router.delete("/delete-all-users", deleteAllUsers);

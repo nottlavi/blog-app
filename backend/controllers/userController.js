@@ -261,6 +261,32 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+exports.getUserById = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "all input fields are required",
+      });
+    }
+
+    const existingUser = await userModel.findById(userId);
+
+    return res.status(200).json({
+      success: true,
+      message: "user fetched with below data",
+      data: existingUser,
+    });
+  } catch (err) {
+    return res.status(200).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 exports.followUser = async (req, res) => {
   try {
     const { followedId } = req.body;
