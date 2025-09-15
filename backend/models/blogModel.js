@@ -27,6 +27,9 @@ const blogSchema = new mongoose.Schema({
       ref: "replyModel",
     },
   ],
+  image: {
+    type: String,
+  },
 });
 
 const blogModel = mongoose.model("blogModel", blogSchema);

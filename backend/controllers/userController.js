@@ -261,6 +261,79 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+exports.followUser = async (req, res) => {
+  try {
+    const { followedId } = req.body;
+    // here followedId is the id of the user who will be followed
+    const followerId = req.user.id;
+    //here userId is the id of a user who wants to follow followedId
+    if (!followerId) {
+      return res.status(400).json({
+        success: false,
+        message: "check user middleware for this",
+      });
+    }
+
+    //fetching the entry of the user who will be followed
+    const followedUser = await userModel.findById(followedId);
+
+    if (!followedUser) {
+      return res.status(400).json({
+        success: false,
+        message: "no such user found who will be followed",
+      });
+    }
+
+    //to check if user already follows this id
+    if (followedUser.followers.includes(followerId)) {
+      return res.status(400).json({
+        success: false,
+        message: "user already follows this account",
+      });
+    }
+
+    if (isFollower) {
+      return res.status(400).json({
+        success: false,
+        message: "you already follow this user",
+      });
+    }
+
+    //pushing the id of the follower  into the entry of followed user
+    await userModel.findByIdAndUpdate(
+      followedId,
+      {
+        $push: { followers: followerId },
+      },
+      { new: true }
+    );
+
+    //fetching the entry of the user who will be following
+    const followerUser = await userModel.findById(followerId);
+
+    if (!followerUser) {
+      return res.status(400).json({
+        success: false,
+        message: "no such user found who will be following",
+      });
+    }
+    //pushing the id of the followed user  into the entry of following user
+    await userModel.findByIdAndUpdate(followerId, {
+      $push: { following: followedId },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `${followerId} successfully followed ${followedId}`,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 exports.logOut = async (req, res) => {
   try {
     const userId = req.user.id;

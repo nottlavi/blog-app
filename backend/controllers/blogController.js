@@ -2,43 +2,28 @@ const blogModel = require("../models/blogModel");
 const userModel = require("../models/userModel");
 
 exports.createBlog = async (req, res) => {
-  //fetching imp details and returning appropiate response
+  try {
+    const { blogTitle, blogDescription, blogBody, author } = req.body;
+    if (!blogTitle || !blogBody || !author) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields" });
+    }
 
-  const { blogTitle, createdAt, author, blogDescription, blogBody } = req.body;
-
-  if (!blogTitle || !createdAt || !author || !blogBody) {
-    return res.status(400).json({
-      success: false,
-      message: "all input fiels are required",
+    const blog = await blogModel.create({
+      blogTitle,
+      blogDescription,
+      blogBody,
+      author,
+      createdAt: new Date(),
     });
+
+    await userModel.findByIdAndUpdate(author, { $push: { blogs: blog._id } });
+
+    return res.status(201).json({ success: true, blog });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
   }
-
-  //creating new entry in the db
-
-  const newBlogEntry = await blogModel.create({
-    blogTitle: blogTitle,
-    createdAt: createdAt,
-    author: author,
-    blogDescription: blogDescription,
-    blogBody: blogBody,
-  });
-
-  //if blogDescription is entered, attaching it with the db as it is not required
-
-  if (blogDescription) {
-    newBlogEntry.blogDescription = blogDescription;
-  }
-
-  //finding and updating the entry for this author
-  const newUser = await userModel.findByIdAndUpdate(author, {
-    $push: { blogs: newBlogEntry._id },
-  });
-
-  return res.status(200).json({
-    success: true,
-    message: "created blog successfully with the below details",
-    details: newBlogEntry,
-  });
 };
 
 // exports.getBlogsByUser = async (req, res) => {
@@ -69,7 +54,10 @@ exports.getBlogById = async (req, res) => {
     const { blogId } = req.query;
 
     //fetching blog entry from db
-    const blogEntry = await blogModel.findById(blogId).populate("author").populate("replies");
+    const blogEntry = await blogModel
+      .findById(blogId)
+      .populate("author")
+      .populate("replies");
 
     if (!blogEntry) {
       return res.status(400).json({
@@ -97,6 +85,22 @@ exports.getAllBlogs = async (req, res) => {
       success: true,
       message: " all blogs fetched across all the users fetched successfully",
       blogs: allBlogs,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+//for development purpose only
+exports.deleteAllBlogs = async (req, res) => {
+  try {
+    await blogModel.deleteMany({});
+    return res.status(200).json({
+      success: true,
+      message: "all blogs deleted",
     });
   } catch (err) {
     return res.status(500).json({

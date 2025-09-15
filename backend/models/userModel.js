@@ -34,6 +34,18 @@ const userSchema = new mongoose.Schema({
     required: true,
     enum: ["Creator", "Reader"],
   },
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "userModel",
+    },
+  ],
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "userModel",
+    },
+  ],
 });
 
 const userModel = mongoose.model("userModel", userSchema);

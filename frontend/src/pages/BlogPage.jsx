@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export const BlogPage = () => {
   const { blogId } = useParams();
@@ -37,7 +38,7 @@ export const BlogPage = () => {
     if (!profile?._id) {
       console.log("can not delete yet");
     }
-    try { 
+    try {
       const res = await axios.post(
         `${BASE_URL}/reply/delete-reply`,
         {
@@ -75,9 +76,11 @@ export const BlogPage = () => {
         <>
           <h1>{blog.blogTitle}</h1>
           <p>{blog.blogBody}</p>
-          <p>
-            Author: {blog.author?.firstName} {blog.author?.lastName}
-          </p>
+          <Link to={`/user/${profile._id}`}>
+            <p>
+              Author: {blog.author?.firstName} {blog.author?.lastName}
+            </p>
+          </Link>
         </>
       ) : (
         <p>Loading...</p>
@@ -107,10 +110,7 @@ export const BlogPage = () => {
           return (
             <div key={idx}>
               {reply.replyBody}
-              <button
-                onClick={() => deleteReplyHandler(reply._id)}
-                
-              >
+              <button onClick={() => deleteReplyHandler(reply._id)}>
                 delete this reply!
               </button>
             </div>

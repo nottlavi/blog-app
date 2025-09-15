@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setEmail, setProfile, setToken } from "./slices/authSlice";
 import { BlogPage } from "./pages/BlogPage";
+import {UserPage} from "./pages/UserPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ function App() {
     if (token && email && profile) {
       dispatch(setEmail(email));
       dispatch(setToken(token));
-      dispatch(setProfile(profile))
+      dispatch(setProfile(profile));
     }
   }, []);
 
@@ -37,6 +38,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/blog/:blogId" element={<BlogPage />} />
+        <Route path="/user/:userId" element={<UserPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

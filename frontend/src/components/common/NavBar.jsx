@@ -10,8 +10,7 @@ export const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  //rl
-  console.log("printing token here: ", token);
+  
 
   const logOutHandler = async () => {
     try {

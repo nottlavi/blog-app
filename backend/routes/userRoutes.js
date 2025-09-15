@@ -9,6 +9,7 @@ const {
   resendOTP,
   getProfile,
   logOut,
+  followUser,
 } = require("../controllers/userController");
 
 const { verifyToken } = require("../middlewares/userMiddlewares");
@@ -19,6 +20,7 @@ router.post("/verify-email", verifyEmail);
 router.post("/resend-otp", resendOTP);
 router.get("/profile", verifyToken, getProfile);
 router.get("/logout", verifyToken, logOut);
+router.post("/follow-user", verifyToken, followUser);
 
 //for development purpose only
 router.delete("/delete-all-users", deleteAllUsers);

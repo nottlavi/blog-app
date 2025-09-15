@@ -68,7 +68,11 @@ exports.deleteReply = async (req, res) => {
 
     //checking if the user who wants to delete the comment is the one who created it
 
-    console.log("printing both the user ids here: ", userId, existingReplyEntry.replyOwnerId.toString())
+    console.log(
+      "printing both the user ids here: ",
+      userId,
+      existingReplyEntry.replyOwnerId.toString()
+    );
     if (userId !== existingReplyEntry.replyOwnerId.toString()) {
       return res.status(400).json({
         success: false,
@@ -94,6 +98,22 @@ exports.deleteReply = async (req, res) => {
     return res.status(200).json({
       success: false,
       message: "entry successfully deleted",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+//for development purpose only
+exports.deleteAllReplies = async (req, res) => {
+  try {
+    await replyModel.deleteMany({});
+    return res.status(200).json({
+      success: true,
+      message: "all replies deleted",
     });
   } catch (err) {
     return res.status(500).json({
