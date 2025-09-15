@@ -265,13 +265,6 @@ exports.getUserById = async (req, res) => {
   try {
     const { userId } = req.body;
 
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        message: "all input fields are required",
-      });
-    }
-
     const existingUser = await userModel.findById(userId);
 
     return res.status(200).json({
@@ -315,13 +308,6 @@ exports.followUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "user already follows this account",
-      });
-    }
-
-    if (isFollower) {
-      return res.status(400).json({
-        success: false,
-        message: "you already follow this user",
       });
     }
 

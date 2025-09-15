@@ -16,12 +16,14 @@ exports.createReply = async (req, res) => {
     }
 
     //creating new entry in reply db
-    const newReplyEntry = await replyModel.create({
+    let newReplyEntry = await replyModel.create({
       replyBody: replyBody,
       replyTime: replyTime,
       onBlogId: onBlogId,
       replyOwnerId: replyOwnerId,
     });
+
+    newReplyEntry = await newReplyEntry.populate("replyOwnerId");
     //pushing this reply's id into user model
     await userModel.findByIdAndUpdate(replyOwnerId, {
       $push: { replies: newReplyEntry._id },

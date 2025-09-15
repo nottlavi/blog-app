@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { clearEmail, clearProfile, clearToken } from "../../slices/authSlice";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -10,7 +10,6 @@ export const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  
 
   const logOutHandler = async () => {
     try {
@@ -43,7 +42,9 @@ export const NavBar = () => {
   return (
     <div className="h-10 flex items-center justify-between">
       {/* div for website title */}
-      <div className="text-3xl">website title</div>
+      <Link to={"/"}>
+        <div className="text-3xl">website title</div>
+      </Link>
       {/* div for buttons */}
       {token ? (
         <button onClick={logOutHandler}>Log Out</button>

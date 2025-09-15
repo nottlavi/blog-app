@@ -1,3 +1,4 @@
+const { model } = require("mongoose");
 const blogModel = require("../models/blogModel");
 const userModel = require("../models/userModel");
 
@@ -57,7 +58,13 @@ exports.getBlogById = async (req, res) => {
     const blogEntry = await blogModel
       .findById(blogId)
       .populate("author")
-      .populate("replies");
+      .populate({
+        path: "replies",
+        populate: {
+          path: "replyOwnerId",
+          model: "userModel",
+        },
+      });
 
     if (!blogEntry) {
       return res.status(400).json({

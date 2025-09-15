@@ -13,34 +13,10 @@ export const UserPage = () => {
 
   //importing BASE_URL from env
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  // this is the user id fetched from the url and the url is derived from BlogPage.jsx
   const { userId } = useParams();
 
-  useEffect(() => {
-    //fetching profile from backend
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get(`${BASE_URL}/user/get-user-by-id`, {
-          params: { userId },
-        });
-        if (res) {
-          console.log(res);
-          setTempProfile(res.data.data);
-        }
-      } catch (err) {
-        if (err.response) {
-          console.log(err.response);
-        } else {
-          console.log("something went wrong");
-        }
-      }
-    };
-    fetchProfile();
-  }, []);
-
   return (
-    <div>
-      hello {profile.firstName}
-      {/* {tempProfile.email === profile.email ? <SelfProfile /> : <OtherProfile />} */}
-    </div>
+    <div>{userId === profile._id ? <SelfProfile /> : <OtherProfile />}</div>
   );
 };

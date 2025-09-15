@@ -12,7 +12,6 @@ export const ReaderHome = () => {
       try {
         const res = await axios.get(`${BASE_URL}/blog/get-all-blogs`);
         if (res) {
-          console.log(res);
           setBlogs(res.data.blogs);
         }
       } catch (err) {
@@ -31,8 +30,8 @@ export const ReaderHome = () => {
       <p>hello {profile.firstName}</p>
       {blogs.map((blog, idx) => {
         return (
-          <Link to={`/blog/${blog._id}`}>
-            <div key={idx}>
+          <Link to={`/blog/${blog._id}`} key={idx}>
+            <div>
               {blog.blogTitle}
               {blog.blogBody}
             </div>

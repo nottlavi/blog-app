@@ -11,6 +11,7 @@ export const BlogPage = () => {
   const [replyBody, setReplyBody] = useState("");
   const profile = useSelector((state) => state.auth.profile);
   const [replies, setReplies] = useState([]);
+  const token = useSelector((state) => state.auth.token);
 
   const createReplyHandler = async (e) => {
     e.preventDefault();
@@ -23,7 +24,10 @@ export const BlogPage = () => {
           onBlogId: blogId,
           replyOwnerId: profile._id,
         },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
       );
       if (res) {
         console.log(res);
@@ -76,7 +80,8 @@ export const BlogPage = () => {
         <>
           <h1>{blog.blogTitle}</h1>
           <p>{blog.blogBody}</p>
-          <Link to={`/user/${profile._id}`}>
+          {/* this is linking to profile of logged in user not on the clicked user */}
+          <Link to={`/user/${blog.author?._id}`}>
             <p>
               Author: {blog.author?.firstName} {blog.author?.lastName}
             </p>
@@ -108,8 +113,9 @@ export const BlogPage = () => {
       <div>
         {replies.map((reply, idx) => {
           return (
-            <div key={idx}>
-              {reply.replyBody}
+            <div key={idx} className="flex gap-4">
+              <div>{reply.replyBody}</div>
+              <div>{reply.replyOwnerId.firstName}</div>
               <button onClick={() => deleteReplyHandler(reply._id)}>
                 delete this reply!
               </button>

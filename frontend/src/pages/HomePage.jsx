@@ -22,9 +22,9 @@ export const HomePage = () => {
 
   return (
     <div>
-      {profile?.role === "Creator" ? (
+      {profile?.role === "Creator" && token ? (
         <CreatorHome />
-      ) : profile?.role === "Reader" ? (
+      ) : profile?.role === "Reader" && token ? (
         <ReaderHome />
       ) : (
         <GuestHome />
