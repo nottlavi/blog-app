@@ -59,6 +59,31 @@ export const BlogPage = () => {
     }
   };
 
+  const likeHandler = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/blog/like-blog`,
+        { blogId },
+        { withCredentials: true }
+      );
+      console.log(res);
+    } catch (err) {
+      console.log(err.response || "something went wrong");
+    }
+  };
+
+  const disLikeHandler = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/blog/unlike-blog`,
+        { blogId },
+        { withCredentials: true }
+      );
+    } catch (err) {
+      console.log(err.response || "something went wrong")
+    }
+  };
+
   useEffect(() => {
     const getBlogDetails = async () => {
       try {
@@ -84,6 +109,13 @@ export const BlogPage = () => {
           <Link to={`/user/${blog.author?._id}`}>
             <p>Author: {blog.author?.firstName}</p>
           </Link>
+          {/* div for likes */}
+          <div>
+            likes:
+            {blog.likes}
+            <button onClick={likeHandler}>like this blog!</button>
+            <button onClick={disLikeHandler}>unlike this blog!</button>
+          </div>
         </>
       ) : (
         <p>Loading...</p>

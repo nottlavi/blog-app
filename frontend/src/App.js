@@ -11,7 +11,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setEmail, setProfile, setToken } from "./slices/authSlice";
 import { BlogPage } from "./pages/BlogPage";
-import {UserPage} from "./pages/UserPage";
+import { UserPage } from "./pages/UserPage";
+import { SearchPage } from "./pages/SearchPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/blog/:blogId" element={<BlogPage />} />
         <Route path="/user/:userId" element={<UserPage />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

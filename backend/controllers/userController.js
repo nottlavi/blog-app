@@ -409,6 +409,56 @@ exports.unFollowUser = async (req, res) => {
   }
 };
 
+exports.upDateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "no user if fetched from the token",
+      });
+    }
+
+    //fetching the user entry which needs to be updated
+    const existingUser = await userModel.findById(userId);
+    if (!existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "no entry found for this user in the db",
+      });
+    }
+
+    //finally fetching and updating the values
+    const { firstName, lastName, email, password } = req.body;
+
+    if (firstName) existingUser.firstName = firstName || existingUser.firstName;
+    if (lastName) existingUser.lastName = lastName || existingUser.lastName;
+    if (email) existingUser.email = email || existingUser.email;
+    if (password) existingUser.password = password || existingUser.password;
+
+    await existingUser.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "profile successfully updated",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.searchUser = async(req, res) => {
+  try {
+    
+  } catch (err) {
+    
+  }
+}
+
 exports.logOut = async (req, res) => {
   try {
     const userId = req.user.id;

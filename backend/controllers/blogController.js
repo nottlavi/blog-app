@@ -101,6 +101,118 @@ exports.getAllBlogs = async (req, res) => {
   }
 };
 
+exports.searchBlogs = async (req, res) => {
+  try {
+    const searchTerm = req.query.q;
+
+    if (!searchTerm) {
+      return res.status(400).json({
+        success: false,
+        message: "no searchTerm found",
+      });
+    }
+
+    const searchPattern = new RegExp(searchTerm, "i");
+
+    const posts = await blogModel
+      .find({
+        $or: [{ blogTitle: searchPattern }, { blogBody: searchPattern }],
+      })
+      .populate("author");
+
+    res.json(posts);
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.likeBlog = async (req, res) => {
+  try {
+    const { blogId } = req.body;
+    const userId = req.user.id;
+
+    const userProfile = await userModel.findById(userId);
+
+    if (userProfile.likes.includes(blogId)) {
+      return res.status(400).json({
+        success: false,
+        message: "you have already liked this blog",
+      });
+    }
+
+    const updatedBlogEntry = await blogModel.findByIdAndUpdate(
+      blogId,
+      {
+        $inc: { likes: 1 },
+      },
+      { new: true }
+    );
+
+    await userModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: { likes: blogId },
+      },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      blogEntry: updatedBlogEntry,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.unLikeBlog = async (req, res) => {
+  try {
+    const { blogId } = req.body;
+    const userId = req.user.id;
+
+    const userProfile = await userModel.findById(userId);
+
+    if (!userProfile.likes.includes(blogId)) {
+      return res.status(400).json({
+        success: false,
+        message: "you dont like this blog at the first place",
+      });
+    }
+
+    await blogModel.findByIdAndUpdate(
+      blogId,
+      {
+        $inc: { likes: -1 },
+      },
+      { new: true }
+    );
+
+    await userModel.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { likes: blogId },
+      },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "unliked / disliked successfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 //for development purpose only
 exports.deleteAllBlogs = async (req, res) => {
   try {

@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { clearEmail, clearProfile, clearToken } from "../../slices/authSlice";
 import { useDispatch } from "react-redux";
+import { IoSearch } from "react-icons/io5";
+
 import axios from "axios";
 
 export const NavBar = () => {
@@ -44,6 +46,11 @@ export const NavBar = () => {
       {/* div for website title */}
       <Link to={"/"}>
         <div className="text-3xl">website title</div>
+      </Link>
+      <Link to={"/search"}>
+        <div>
+          <IoSearch />
+        </div>
       </Link>
       {/* div for buttons */}
       {token ? (
