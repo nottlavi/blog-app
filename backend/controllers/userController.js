@@ -346,6 +346,69 @@ exports.followUser = async (req, res) => {
   }
 };
 
+exports.unFollowUser = async (req, res) => {
+  try {
+    //fetching id to be unfollowed from the body of the req
+    const { followedId } = req.body;
+    //fetching id which will be unfollowing followedId from the token
+    const followerId = req.user.id;
+
+    //fetching info of followed user from the db
+    const followedUser = await userModel.findById(followedId);
+    if (!followedUser) {
+      return res.status(400).json({
+        success: false,
+        message: "no user found who will be unfollowed",
+      });
+    }
+
+    //fetching info of follower user from the db
+    const followerUser = await userModel.findById(followerId);
+
+    console.log(followerUser);
+    if (!followerUser) {
+      return res.status(400).json({
+        success: false,
+        message: "no user found who will be unfollowing",
+      });
+    }
+
+    if (!followedUser.followers.includes(followerId)) {
+      return res.status(400).json({
+        success: false,
+        message: "user doesnt follow the followed user",
+      });
+    }
+    //now removing the follower from followed user entry
+    await userModel.findByIdAndUpdate(
+      followedId,
+      {
+        $pull: { followers: followerId },
+      },
+      { new: true }
+    );
+
+    //now removing the following from follower user id
+    await userModel.findByIdAndUpdate(
+      followerId,
+      {
+        $pull: { following: followedId },
+      },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: false,
+      message: `${followerUser.firstName} unfollowed ${followedUser.firstName}`,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 exports.logOut = async (req, res) => {
   try {
     const userId = req.user.id;

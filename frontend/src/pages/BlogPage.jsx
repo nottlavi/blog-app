@@ -82,9 +82,7 @@ export const BlogPage = () => {
           <p>{blog.blogBody}</p>
           {/* this is linking to profile of logged in user not on the clicked user */}
           <Link to={`/user/${blog.author?._id}`}>
-            <p>
-              Author: {blog.author?.firstName}
-            </p>
+            <p>Author: {blog.author?.firstName}</p>
           </Link>
         </>
       ) : (
@@ -115,11 +113,13 @@ export const BlogPage = () => {
           return (
             <div key={idx} className="flex gap-4">
               <div>{reply.replyBody}</div>
-              {reply.replyOwnerId.email === profile.email ? (
-                <div>{reply.replyOwnerId.firstName} (you)</div>
-              ) : (
-                <div>{reply.replyOwnerId.firstName}</div>
-              )}
+              <Link to={`/user/${reply.replyOwnerId._id}`}>
+                {reply.replyOwnerId.email === profile.email ? (
+                  <div>{reply.replyOwnerId.firstName} (you)</div>
+                ) : (
+                  <div>{reply.replyOwnerId.firstName}</div>
+                )}
+              </Link>
               {reply.replyOwnerId.email === profile.email ? (
                 <button onClick={() => deleteReplyHandler(reply._id)}>
                   delete this reply!

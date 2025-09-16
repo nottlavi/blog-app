@@ -1,28 +1,76 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { setProfile } from "../../../slices/authSlice";
 
 export const OtherProfile = () => {
-  //fetching url from the url
   const { userId } = useParams();
   const followedId = userId;
   const [tempProfile, setTempProfile] = useState({});
+  const dispatch = useDispatch();
 
-  //importing backend url from enviorment variables file
+  const profile = useSelector((state) => state.auth.profile);
+  const token = useSelector((state) => state.auth.token);
+
+  const [isFollowing, setIsFollowing] = useState(false);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  //fetching logic for following user from backend here
+  useEffect(() => {
+    if (profile?._id && userId) {
+      setIsFollowing(tempProfile.followers?.includes(profile._id));
+    }
+  }, [profile, userId]);
+
   const followHandler = async () => {
     try {
       const res = await axios.post(
         `${BASE_URL}/user/follow-user`,
         { followedId },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
       );
+      setIsFollowing(true);
+      refetchCurrentUserProfile();
     } catch (err) {
       if (err.response) {
         console.log(err.response || "something went wrong");
       }
+    }
+  };
+
+  const unFollowHandler = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/user/unfollow-user`,
+        { followedId },
+        {
+          withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+      setIsFollowing(false);
+      refetchCurrentUserProfile(false);
+    } catch (err) {
+      console.log(err.response || "something went wrong");
+    }
+  };
+
+  const refetchCurrentUserProfile = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/user/get-user-by-id`,
+        { userId },
+        {
+          withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+      setTempProfile(res.data.data);
+    } catch (err) {
+      console.log(err.response || "something went wrong");
     }
   };
 
@@ -40,16 +88,17 @@ export const OtherProfile = () => {
       }
     };
     fetchProfile();
-  });
+  }, [userId]);
 
   return (
     <div className="flex flex-col gap-4">
       this is the profile of {tempProfile.firstName}
-      <div>
-        followers: {tempProfile.followers?.length}
-      </div>
-      <button onClick={followHandler}>follow him!</button>
-      
+      <div>followers: {tempProfile.followers?.length}</div>
+      {isFollowing ? (
+        <button onClick={unFollowHandler}>unfollow them?</button>
+      ) : (
+        <button onClick={followHandler}>follow them?</button>
+      )}
     </div>
   );
 };
