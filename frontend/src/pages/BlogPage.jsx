@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import DOMPurify from "dompurify";
 
 export const BlogPage = () => {
   const { blogId } = useParams();
@@ -104,7 +105,13 @@ export const BlogPage = () => {
       {blog ? (
         <>
           <h1>{blog.blogTitle}</h1>
-          <p>{blog.blogBody}</p>
+          {/* render rich HTML (images, links, etc.) */}
+          <div
+            className="prose max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(blog.blogBody || ""),
+            }}
+          />
           {/* this is linking to profile of logged in user not on the clicked user */}
           <Link to={`/user/${blog.author?._id}`}>
             <p>Author: {blog.author?.firstName}</p>

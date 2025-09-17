@@ -16,7 +16,16 @@ export const CreatorHome = () => {
   const [blogBody, setBlogBody] = useState("");
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-
+  // upload image used by the editor's image button
+  const uploadImageToServer = async (file) => {
+    const fd = new FormData();
+    fd.append("image", file); // field name must be "image" (matches backend)
+    const res = await axios.post(`${BASE_URL}/blog/image`, fd, {
+      withCredentials: true,
+      // Do NOT set 'Content-Type' manually; browser sets multipart boundary.
+    });
+    return res.data.imageUrl;
+  };
 
   const createBlogHandler = async (e) => {
     e.preventDefault();
@@ -119,10 +128,11 @@ export const CreatorHome = () => {
               }}
             />
           </div>
-          {/* div for blogBody */}
+          {/* div for blogBody (supports inline image upload) */}
           <TextEditor
             value={blogBody}
             onChange={(newValue) => setBlogBody(newValue)}
+            uploadImageToServer={uploadImageToServer}
           />
           <button type="submit">publish blog</button>
         </form>
