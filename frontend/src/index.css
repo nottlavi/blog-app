@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Tailwind base theme */
+  @apply bg-gray-950 text-gray-100;
 }
 
 code {
@@ -34,3 +36,38 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Reusable Tailwind component styles */
+@layer components {
+  .container-page {
+    @apply max-w-5xl mx-auto px-4;
+  }
+
+  .card {
+    @apply bg-gray-900/60 backdrop-blur border border-gray-800 rounded-xl shadow-lg;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-indigo-600 text-white hover:bg-indigo-500 focus:ring-indigo-500 focus:ring-offset-gray-900;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-800 text-gray-100 hover:bg-gray-700 focus:ring-gray-600 focus:ring-offset-gray-900;
+  }
+
+  .input {
+    @apply w-full rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-400 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent;
+  }
+
+  .label {
+    @apply block mb-1 text-sm text-gray-300;
+  }
+
+  .page-title {
+    @apply text-3xl font-semibold tracking-tight mb-6;
+  }
+}

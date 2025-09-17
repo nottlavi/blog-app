@@ -93,13 +93,13 @@ export const OtherProfile = () => {
   }, [userId]);
 
   return (
-    <div className="flex flex-col gap-4">
-      this is the profile of {tempProfile.firstName}
-      <div>followers: {tempProfile.followers?.length}</div>
+    <div className="card p-6 space-y-4">
+      <div className="text-lg">This is the profile of {tempProfile.firstName}</div>
+      <div className="text-gray-400">followers: {tempProfile.followers?.length}</div>
       {isFollowing ? (
-        <button onClick={unFollowHandler}>unfollow them?</button>
+        <button onClick={unFollowHandler} className="btn-secondary">Unfollow</button>
       ) : (
-        <button onClick={followHandler}>follow them?</button>
+        <button onClick={followHandler} className="btn-primary">Follow</button>
       )}
     </div>
   );

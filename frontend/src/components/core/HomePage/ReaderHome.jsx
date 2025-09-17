@@ -26,18 +26,20 @@ export const ReaderHome = () => {
   }, []);
 
   return (
-    <div>
-      <p>hello {profile.firstName}</p>
-      {blogs.map((blog, idx) => {
-        return (
-          <Link to={`/blog/${blog._id}`} key={idx}>
-            <div>
-              {blog.blogTitle}
-              {blog.blogBody}
-            </div>
-          </Link>
-        );
-      })}
+    <div className="space-y-6">
+      <p className="text-lg">Hello {profile.firstName}</p>
+      <div className="grid gap-3">
+        {blogs.map((blog, idx) => {
+          return (
+            <Link to={`/blog/${blog._id}`} key={idx}>
+              <div className="card p-4 hover:bg-gray-900 transition">
+                <div className="font-medium">{blog.blogTitle}</div>
+                <div className="text-gray-400 line-clamp-2">{blog.blogBody}</div>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };

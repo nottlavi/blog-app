@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../../../slices/authSlice";
 import { LoadingPage } from "../../../pages/LoadingPage";
 import { setProfile } from "../../../slices/authSlice";
+import { toast, ToastContainer } from "react-toastify";
 
 export const FormTemplate = ({ type }) => {
   const [email, setEmail] = useState("");
@@ -44,9 +45,7 @@ export const FormTemplate = ({ type }) => {
     } catch (err) {
       if (err.response) {
         setLoading(false);
-        console.log(err.response);
-      } else {
-        console.log("something went wrong");
+        toast.error(err.response.data.message);
       }
     }
   };
@@ -72,6 +71,7 @@ export const FormTemplate = ({ type }) => {
   const signUpHandler = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const res = await axios.post(`${BASE_URL}/user/signup`, {
         email,
         password,
@@ -86,8 +86,10 @@ export const FormTemplate = ({ type }) => {
         dispatch(setAuthEmail(email));
       }
     } catch (err) {
+      setLoading(false);
       if (err.response) {
         console.log(err.response);
+        toast.error(err.response.data.message);
       } else {
         console.log("something went wrong");
       }
@@ -95,17 +97,22 @@ export const FormTemplate = ({ type }) => {
   };
 
   return (
-    <div>
+    <div className="max-w-md mx-auto">
+      <ToastContainer />
+
       {loading ? (
         <LoadingPage />
       ) : type === "login" ? (
-        <form onSubmit={logInHandler}>
+        <form onSubmit={logInHandler} className="card p-6 space-y-4">
           {/* login form */}
           {/* div for email */}
           <div>
-            <label htmlFor="email"> email: </label>
+            <label htmlFor="email" className="label">
+              {" "}
+              email{" "}
+            </label>
             <input
-              className="text-black"
+              className="input"
               placeholder="enter email"
               value={email}
               id="email"
@@ -118,9 +125,11 @@ export const FormTemplate = ({ type }) => {
           </div>
           {/* div for password */}
           <div>
-            <label htmlFor="password">password: </label>
+            <label htmlFor="password" className="label">
+              password
+            </label>
             <input
-              className="text-black"
+              className="input"
               placeholder="enter password"
               value={password}
               id="password"
@@ -131,16 +140,20 @@ export const FormTemplate = ({ type }) => {
               }}
             />
           </div>
-          <button type="submit">Log In</button>
+          <button type="submit" className="btn-primary w-full">
+            Log In
+          </button>
         </form>
       ) : (
-        <form onSubmit={signUpHandler}>
+        <form onSubmit={signUpHandler} className="card p-6 space-y-4">
           {/* form for sign up */}
           {/* div for firstName */}
           <div>
-            <label htmlFor="firstName">first name: </label>
+            <label htmlFor="firstName" className="label">
+              first name
+            </label>
             <input
-              className="text-black"
+              className="input"
               placeholder="enter first name"
               value={firstName}
               id="firstName"
@@ -153,9 +166,11 @@ export const FormTemplate = ({ type }) => {
           </div>
           {/* div for lastName */}
           <div>
-            <label htmlFor="lastName">last name: </label>
+            <label htmlFor="lastName" className="label">
+              last name
+            </label>
             <input
-              className="text-black"
+              className="input"
               placeholder="enter last name"
               value={lastName}
               id="lastName"
@@ -168,9 +183,12 @@ export const FormTemplate = ({ type }) => {
           </div>
           {/* div for email */}
           <div>
-            <label htmlFor="email"> email: </label>
+            <label htmlFor="email" className="label">
+              {" "}
+              email{" "}
+            </label>
             <input
-              className="text-black"
+              className="input"
               placeholder="enter email"
               value={email}
               id="email"
@@ -183,9 +201,11 @@ export const FormTemplate = ({ type }) => {
           </div>
           {/* div for password */}
           <div>
-            <label htmlFor="password">password: </label>
+            <label htmlFor="password" className="label">
+              password
+            </label>
             <input
-              className="text-black"
+              className="input"
               placeholder="enter password"
               value={password}
               id="password"
@@ -198,45 +218,47 @@ export const FormTemplate = ({ type }) => {
           </div>
           {/* div for confirm password */}
           <div>
-            <label htmlFor="confirmPassword">confirm password: </label>
+            <label htmlFor="confirmPassword" className="label">
+              confirm password
+            </label>
             <input
-              className="text-black"
+              className="input"
               placeholder="re-enter password"
               value={confirmPassword}
               id="confirmPassword"
               name="confirmPassword"
-              type="confirmPassword"
+              type="password"
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
               }}
             />
           </div>
           {/* div for role */}
-          <div>
-            <label>
+          <div className="flex items-center gap-6">
+            <label className="inline-flex items-center gap-2">
               <input
-                className="text-black"
+                className="accent-indigo-500"
                 type="radio"
                 name="role"
                 value="Creator"
                 checked={role === "Creator"}
                 onChange={(e) => setRole(e.target.value)}
               />
-              Creator
+              <span>Creator</span>
             </label>
-            <label>
+            <label className="inline-flex items-center gap-2">
               <input
-                className="text-black"
+                className="accent-indigo-500"
                 type="radio"
                 name="role"
                 value="Reader"
                 checked={role === "Reader"}
                 onChange={(e) => setRole(e.target.value)}
               />
-              Reader
+              <span>Reader</span>
             </label>
           </div>
-          <button>Sign Up</button>
+          <button className="btn-primary w-full">Sign Up</button>
         </form>
       )}
     </div>

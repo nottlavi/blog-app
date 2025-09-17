@@ -17,6 +17,8 @@ export const UserPage = () => {
   const { userId } = useParams();
 
   return (
-    <div>{userId === profile._id ? <SelfProfile /> : <OtherProfile />}</div>
+    <div className="space-y-6">
+      {userId === profile._id ? <SelfProfile /> : <OtherProfile />}
+    </div>
   );
 };

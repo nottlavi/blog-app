@@ -42,23 +42,31 @@ export const NavBar = () => {
   useEffect(() => {}, [token]);
 
   return (
-    <div className="h-10 flex items-center justify-between">
-      {/* div for website title */}
-      <Link to={"/"}>
-        <div className="text-3xl">website title</div>
-      </Link>
-      <Link to={"/search"}>
-        <div>
-          <IoSearch />
+    <div className="flex items-center justify-between gap-4">
+      {/* Brand */}
+      <Link to={"/"} className="group">
+        <div className="text-xl sm:text-2xl font-semibold tracking-tight">
+          <span className="text-white">Blog</span>
+          <span className="text-indigo-400 group-hover:text-indigo-300 transition">App</span>
         </div>
       </Link>
-      {/* div for buttons */}
+
+      {/* Search icon */}
+      <Link to={"/search"} className="text-gray-300 hover:text-white transition">
+        <div className="p-2 rounded-md hover:bg-gray-800">
+          <IoSearch size={20} />
+        </div>
+      </Link>
+
+      {/* Auth buttons */}
       {token ? (
-        <button onClick={logOutHandler}>Log Out</button>
+        <button onClick={logOutHandler} className="btn-secondary">
+          Log Out
+        </button>
       ) : (
-        <div className="flex gap-4">
-          <button onClick={logInHandler}>Log In</button>
-          <button onClick={signUpHandler}>Sign Up</button>
+        <div className="flex items-center gap-3">
+          <button onClick={logInHandler} className="btn-secondary">Log In</button>
+          <button onClick={signUpHandler} className="btn-primary">Sign Up</button>
         </div>
       )}
     </div>

@@ -76,7 +76,7 @@ const RichTextEditor = ({ value, onChange, uploadImageToServer }) => {
   };
 
   return (
-    <div className="rich-text-editor">
+    <div className="rich-text-editor card p-2">
       <ReactQuill
         ref={quillRef}
         theme="snow"

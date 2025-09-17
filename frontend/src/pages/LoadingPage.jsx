@@ -1,7 +1,7 @@
 import React from "react";
 
 export const LoadingPage = () => {
-  return <div >
-        <span className="loader"></span>
+  return <div className="min-h-[40vh] flex items-center justify-center">
+        <span className="loader border-gray-300"></span>
      </div>;
 };

@@ -81,28 +81,28 @@ export const CreatorHome = () => {
   }, [profile?._id]);
 
   return (
-    <div>
-      Welcome {profile.firstName}
-      <div className="mt-10">your blogs</div>
+    <div className="space-y-8">
+      <div className="text-lg">Welcome {profile.firstName}</div>
+      <div className="text-sm uppercase tracking-wide text-gray-400">your blogs</div>
       {/* div for all the blogs by the user */}
-      <div>
+      <div className="grid gap-3">
         {userBlogs.map((blog, idx) => {
           return (
             <Link to={`/blog/${blog._id}`} key={idx}>
-              <div>{blog.blogTitle}</div>
+              <div className="card p-4 hover:bg-gray-900 transition">{blog.blogTitle}</div>
             </Link>
           );
         })}
       </div>
       {/* div to create a blog */}
-      <div className="mt-10">
-        <div>create a blog:</div>
-        <form onSubmit={createBlogHandler}>
+      <div className="space-y-3">
+        <div className="text-sm uppercase tracking-wide text-gray-400">create a blog</div>
+        <form onSubmit={createBlogHandler} className="card p-6 space-y-4">
           {/* div for blogTitle */}
           <div>
-            <label htmlFor="blogTitle">blog title: </label>
+            <label htmlFor="blogTitle" className="label">blog title</label>
             <input
-              className="text-black"
+              className="input"
               placeholder="enter blog title"
               name="blogTitle"
               id="blogTitle"
@@ -115,9 +115,9 @@ export const CreatorHome = () => {
           </div>
           {/* div for blogDescription */}
           <div>
-            <label htmlFor="blogDescription">blog description: </label>
+            <label htmlFor="blogDescription" className="label">blog description</label>
             <input
-              className="text-black"
+              className="input"
               placeholder="enter blog description"
               name="blogDescription"
               id="blogDescription"
@@ -134,7 +134,7 @@ export const CreatorHome = () => {
             onChange={(newValue) => setBlogBody(newValue)}
             uploadImageToServer={uploadImageToServer}
           />
-          <button type="submit">publish blog</button>
+          <button type="submit" className="btn-primary">Publish</button>
         </form>
       </div>
     </div>

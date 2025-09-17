@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import DOMPurify from "dompurify";
+import { toast, ToastContainer } from "react-toastify";
 
 export const BlogPage = () => {
   const { blogId } = useParams();
@@ -70,6 +71,7 @@ export const BlogPage = () => {
       console.log(res);
     } catch (err) {
       console.log(err.response || "something went wrong");
+      toast.error(err.response.data.message);
     }
   };
 
@@ -101,40 +103,47 @@ export const BlogPage = () => {
   }, [blogId, replies]);
 
   return (
-    <div>
+    <div className="space-y-8">
+      <ToastContainer />
       {blog ? (
         <>
-          <h1>{blog.blogTitle}</h1>
+          <h1 className="page-title">{blog.blogTitle}</h1>
           {/* render rich HTML (images, links, etc.) */}
           <div
-            className="prose max-w-none"
+            className="prose prose-invert max-w-none"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(blog.blogBody || ""),
             }}
           />
-          {/* this is linking to profile of logged in user not on the clicked user */}
-          <Link to={`/user/${blog.author?._id}`}>
-            <p>Author: {blog.author?.firstName}</p>
+          <Link
+            to={`/user/${blog.author?._id}`}
+            className="text-indigo-400 hover:text-indigo-300"
+          >
+            <p className="mt-4">Author: {blog.author?.firstName}</p>
           </Link>
           {/* div for likes */}
-          <div>
-            likes:
-            {blog.likes}
-            <button onClick={likeHandler}>like this blog!</button>
-            <button onClick={disLikeHandler}>unlike this blog!</button>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-400">likes: {blog.likes}</span>
+            <button onClick={likeHandler} className="btn-primary">
+              Like
+            </button>
+
+            <button onClick={disLikeHandler} className="btn-secondary">
+              Unlike
+            </button>
           </div>
         </>
       ) : (
-        <p>Loading...</p>
+        <p className="text-gray-400">Loading...</p>
       )}
       {/* div for leaving a reply on this particualr blog */}
-      <div>
-        <form onSubmit={createReplyHandler}>
+      <div className="card p-4">
+        <form onSubmit={createReplyHandler} className="space-y-3">
           {/* div for blog title */}
           <div>
-            <label>reply:</label>
+            <label className="label">reply</label>
             <input
-              className="text-black"
+              className="input"
               name="replyBody"
               id="replyBody"
               value={replyBody}
@@ -143,29 +152,42 @@ export const BlogPage = () => {
               }}
             />
           </div>
-          <button type="submit">submit reply!</button>
+          <button type="submit" className="btn-primary">
+            Submit reply
+          </button>
         </form>
       </div>
       {/* div to show all the replies */}
-      <div>
+      <div className="space-y-3">
         {replies.map((reply, idx) => {
           return (
-            <div key={idx} className="flex gap-4">
-              <div>{reply.replyBody}</div>
-              <Link to={`/user/${reply.replyOwnerId._id}`}>
+            <div
+              key={idx}
+              className="card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+            >
+              <div className="text-gray-100">{reply.replyBody}</div>
+              <div className="flex items-center gap-3">
+                <Link
+                  to={`/user/${reply.replyOwnerId._id}`}
+                  className="text-indigo-400 hover:text-indigo-300"
+                >
+                  {reply.replyOwnerId.email === profile.email ? (
+                    <div>{reply.replyOwnerId.firstName} (you)</div>
+                  ) : (
+                    <div>{reply.replyOwnerId.firstName}</div>
+                  )}
+                </Link>
                 {reply.replyOwnerId.email === profile.email ? (
-                  <div>{reply.replyOwnerId.firstName} (you)</div>
+                  <button
+                    onClick={() => deleteReplyHandler(reply._id)}
+                    className="btn-secondary"
+                  >
+                    Delete
+                  </button>
                 ) : (
-                  <div>{reply.replyOwnerId.firstName}</div>
+                  <div></div>
                 )}
-              </Link>
-              {reply.replyOwnerId.email === profile.email ? (
-                <button onClick={() => deleteReplyHandler(reply._id)}>
-                  delete this reply!
-                </button>
-              ) : (
-                <div></div>
-              )}
+              </div>
             </div>
           );
         })}

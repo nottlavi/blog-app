@@ -53,19 +53,24 @@ function App() {
   }, []);
 
   return (
-    //make sure to remove this className pre styling
-    <div className="text-white bg-black min-h-screen">
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LogInPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
-        <Route path="/blog/:blogId" element={<BlogPage />} />
-        <Route path="/user/:userId" element={<UserPage />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+    <div className="min-h-screen">
+      <header className="border-b border-gray-800/80 sticky top-0 z-40 backdrop-blur bg-gray-950/70">
+        <div className="container-page py-3">
+          <NavBar />
+        </div>
+      </header>
+      <main className="container-page py-8">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LogInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/blog/:blogId" element={<BlogPage />} />
+          <Route path="/user/:userId" element={<UserPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
     </div>
   );
 }

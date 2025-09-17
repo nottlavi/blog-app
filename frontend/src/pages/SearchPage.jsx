@@ -34,11 +34,11 @@ export const SearchPage = () => {
   };
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* div for input search field field */}
-      <div>
+      <div className="card p-4 flex flex-col sm:flex-row gap-3 sm:items-center">
         <input
-          className="text-black"
+          className="input flex-1"
           placeholder="search the blog-app"
           value={searchTerm}
           onChange={(e) => {
@@ -50,30 +50,30 @@ export const SearchPage = () => {
           onChange={(e) => {
             setSearchTopic(e.target.value);
           }}
-          className="text-black"
+          className="input w-auto"
         >
           <option>Blogs</option>
           <option>Users</option>
         </select>
         {searchTopic === "Blogs" ? (
-          <button onClick={searchHandler}>search blogs</button>
+          <button onClick={searchHandler} className="btn-primary">Search blogs</button>
         ) : (
-          <button onClick={searchUsersHandler}>search users</button>
+          <button onClick={searchUsersHandler} className="btn-primary">Search users</button>
         )}
       </div>
 
-      <div>
+      <div className="grid gap-3">
         {searchResults.map((item, idx) => {
           if (searchTopic === "Blogs") {
             return (
               <Link to={`/blog/${item._id}`} key={idx}>
-                <div>{item.blogTitle}</div>
+                <div className="card p-4 hover:bg-gray-900 transition">{item.blogTitle}</div>
               </Link>
             );
           } else {
             return (
               <Link to={`/user/${item._id}`} key={idx}>
-                <div>{item.firstName}</div>
+                <div className="card p-4 hover:bg-gray-900 transition">{item.firstName}</div>
               </Link>
             );
           }

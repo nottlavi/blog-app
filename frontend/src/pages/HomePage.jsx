@@ -21,7 +21,7 @@ export const HomePage = () => {
   }, [profile]);
 
   return (
-    <div>
+    <div className="space-y-6">
       {profile?.role === "Creator" && token ? (
         <CreatorHome />
       ) : profile?.role === "Reader" && token ? (

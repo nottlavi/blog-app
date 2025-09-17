@@ -30,23 +30,25 @@ export const VerifyEmailPage = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={verificationHandler}>
+    <div className="max-w-md mx-auto space-y-6">
+      <h1 className="page-title">Verify your email</h1>
+      <form onSubmit={verificationHandler} className="card p-6 space-y-4">
         {/* div for OTP */}
         <div>
-          <label htmlFor="OTP">OTP: </label>
+          <label htmlFor="OTP" className="label">OTP</label>
           <input
             name="OTP"
             id="OTP"
             type="text"
-            placeholder="enter otp: "
+            placeholder="Enter the code"
+            className="input tracking-widest"
             value={OTP}
             onChange={(e) => {
               setOTP(e.target.value);
             }}
           />
         </div>
-        <button type="submit">verify email</button>
+        <button type="submit" className="btn-primary w-full">Verify email</button>
       </form>
     </div>
   );
