@@ -1,43 +1,90 @@
-import React, { useRef } from "react";
+// frontend/src/components/common/TextEditor.jsx
+
+import React, { useRef, useState, useCallback, useMemo } from "react";
 import ReactQuill from "react-quill-new";
-import "react-quill/dist/quill.snow.css"; // Import the styles
+import "react-quill-new/dist/quill.snow.css";
 
-const RichTextEditor = ({ value, onChange }) => {
+const RichTextEditor = ({ value, onChange, uploadImageToServer }) => {
   const quillRef = useRef(null);
+  const [editorValue, setEditorValue] = useState(value || "");
 
-  // Define what tools appear in the toolbar
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image"], // This enables the image tool
-      ["clean"],
+  // image handler: triggered when user clicks toolbar image button
+  const imageHandler = useCallback(() => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files && input.files[0];
+      if (file) {
+        try {
+          // uploadImageToServer should return a URL of uploaded image
+          const url = await uploadImageToServer(file);
+          const editor = quillRef.current?.getEditor();
+          const range = editor?.getSelection(true);
+          if (range) {
+            // insert the image in the editor at cursor
+            editor.insertEmbed(range.index, "image", url);
+            // move cursor after image
+            editor.setSelection(range.index + 1);
+          }
+        } catch (err) {
+          console.error("Image upload failed:", err);
+        }
+      }
+    };
+  }, [uploadImageToServer]);
+
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          [{ header: [1, 2, 3, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link", "image"],
+          ["clean"],
+        ],
+        handlers: {
+          image: imageHandler,
+        },
+      },
+    }),
+    [imageHandler]
+  );
+
+  const formats = useMemo(
+    () => [
+      "header",
+      "bold",
+      "italic",
+      "underline",
+      "strike",
+      "list",
+      "link",
+      "image",
     ],
-  };
+    []
+  );
 
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "list",
-    "bullet",
-    "link",
-    "image",
-  ];
+  const handleChange = (newValue) => {
+    setEditorValue(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
+  };
 
   return (
     <div className="rich-text-editor">
       <ReactQuill
         ref={quillRef}
         theme="snow"
-        value={value}
-        onChange={onChange}
+        value={editorValue}
+        onChange={handleChange}
         modules={modules}
         formats={formats}
-        placeholder="Start writing your story..."
+        placeholder="Start writing..."
       />
     </div>
   );

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { setProfile } from "../../../slices/authSlice";
 import { Link } from "react-router-dom";
+import TextEditor from "../../common/TextEditor";
 
 export const CreatorHome = () => {
   //import profile from redux
@@ -14,6 +15,8 @@ export const CreatorHome = () => {
   const [blogDescription, setBlogDescription] = useState("");
   const [blogBody, setBlogBody] = useState("");
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+
 
   const createBlogHandler = async (e) => {
     e.preventDefault();
@@ -77,7 +80,7 @@ export const CreatorHome = () => {
         {userBlogs.map((blog, idx) => {
           return (
             <Link to={`/blog/${blog._id}`} key={idx}>
-              <div >{blog.blogTitle}</div>
+              <div>{blog.blogTitle}</div>
             </Link>
           );
         })}
@@ -117,20 +120,10 @@ export const CreatorHome = () => {
             />
           </div>
           {/* div for blogBody */}
-          <div>
-            <label htmlFor="blogBody">blog body: </label>
-            <input
-              className="text-black"
-              placeholder="enter blog description"
-              name="blogBody"
-              id="blogBody"
-              type="text"
-              value={blogBody}
-              onChange={(e) => {
-                setBlogBody(e.target.value);
-              }}
-            />
-          </div>
+          <TextEditor
+            value={blogBody}
+            onChange={(newValue) => setBlogBody(newValue)}
+          />
           <button type="submit">publish blog</button>
         </form>
       </div>

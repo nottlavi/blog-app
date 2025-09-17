@@ -80,7 +80,7 @@ export const BlogPage = () => {
         { withCredentials: true }
       );
     } catch (err) {
-      console.log(err.response || "something went wrong")
+      console.log(err.response || "something went wrong");
     }
   };
 
