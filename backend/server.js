@@ -9,7 +9,12 @@ const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT;
-app.use(cors({ origin: "*" }));
+app.use(
+  cors({
+    origin: "https://blog-app-mu-green.vercel.app", // your frontend
+    credentials: true, // allow cookies/auth headers
+  })
+);
 app.use(cookieParser());
 
 connect();
