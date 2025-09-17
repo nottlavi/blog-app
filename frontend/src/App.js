@@ -9,10 +9,18 @@ import { NotFound } from "./pages/NotFound";
 import { NavBar } from "./components/common/NavBar";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setEmail, setProfile, setToken } from "./slices/authSlice";
+import {
+  setEmail,
+  setProfile,
+  setToken,
+  clearEmail,
+  clearProfile,
+  clearToken,
+} from "./slices/authSlice";
 import { BlogPage } from "./pages/BlogPage";
 import { UserPage } from "./pages/UserPage";
 import { SearchPage } from "./pages/SearchPage";
+import { jwtDecode } from "jwt-decode";
 
 function App() {
   const dispatch = useDispatch();
@@ -21,6 +29,21 @@ function App() {
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
     const profile = JSON.parse(localStorage.getItem("profile"));
+
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log(decodedToken.exp);
+
+      if (decodedToken.exp * 1000 < Date.now()) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("email");
+        localStorage.removeItem("profile");
+
+        dispatch(clearToken());
+        dispatch(clearEmail());
+        dispatch(clearProfile());
+      }
+    }
 
     if (token && email && profile) {
       dispatch(setEmail(email));

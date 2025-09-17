@@ -6,10 +6,18 @@ export const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [searchResults, setSearchResults] = useState([]);
-  const [searchTopic, setSearchTopic] = useState("");
+  const [searchTopic, setSearchTopic] = useState("Blogs");
 
-  //rl
-  console.log(searchTopic);
+  const searchUsersHandler = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/user/search-user?q=${searchTerm}`
+      );
+      setSearchResults(res.data);
+    } catch (err) {
+      console.log(err.response || "something went wrong");
+    }
+  };
 
   const searchHandler = async () => {
     try {
@@ -42,20 +50,33 @@ export const SearchPage = () => {
           onChange={(e) => {
             setSearchTopic(e.target.value);
           }}
+          className="text-black"
         >
           <option>Blogs</option>
           <option>Users</option>
         </select>
-        <button onClick={searchHandler}>search</button>
+        {searchTopic === "Blogs" ? (
+          <button onClick={searchHandler}>search blogs</button>
+        ) : (
+          <button onClick={searchUsersHandler}>search users</button>
+        )}
       </div>
 
       <div>
-        {searchResults.map((blog, idx) => {
-          return (
-            <Link to={`/blog/${blog._id}`}>
-              <div key={idx}>{blog.blogTitle}</div>
-            </Link>
-          );
+        {searchResults.map((item, idx) => {
+          if (searchTopic === "Blogs") {
+            return (
+              <Link to={`/blog/${item._id}`} key={idx}>
+                <div>{item.blogTitle}</div>
+              </Link>
+            );
+          } else {
+            return (
+              <Link to={`/user/${item._id}`} key={idx}>
+                <div>{item.firstName}</div>
+              </Link>
+            );
+          }
         })}
       </div>
     </div>

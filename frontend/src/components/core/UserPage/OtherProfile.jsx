@@ -17,10 +17,12 @@ export const OtherProfile = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
-    if (profile?._id && userId) {
-      setIsFollowing(tempProfile.followers?.includes(profile._id));
-    }
-  }, [profile, userId]);
+    refetchCurrentUserProfile();
+  }, [userId]); 
+
+  useEffect(() => {
+    setIsFollowing(tempProfile.followers?.includes(profile._id));
+  }, [tempProfile, profile]);
 
   const followHandler = async () => {
     try {

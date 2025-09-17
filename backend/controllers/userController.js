@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const { sendMail } = require("../services/sendMail");
 const OTPModel = require("../models/OTPModel");
 const jwt = require("jsonwebtoken");
+const blogModel = require("../models/blogModel");
 require("dotenv").config();
 const jwtSecret = process.env.JWT_SECRET;
 
@@ -451,13 +452,31 @@ exports.upDateProfile = async (req, res) => {
   }
 };
 
-exports.searchUser = async(req, res) => {
+exports.searchUser = async (req, res) => {
   try {
-    
+    const searchTerm = req.query.q;
+
+    if (!searchTerm) {
+      return res.status(400).json({
+        success: false,
+        message: "couldnt find search term",
+      });
+    }
+
+    const searchPattern = new RegExp(searchTerm, "i");
+
+    const users = await userModel.find({
+      $or: [{ firstName: searchPattern }, { lastName: searchPattern }],
+    });
+
+    res.json(users);
   } catch (err) {
-    
+    return res.json({
+      success: false,
+      message: err.message,
+    });
   }
-}
+};
 
 exports.logOut = async (req, res) => {
   try {

@@ -13,6 +13,7 @@ const {
   getUserById,
   unFollowUser,
   upDateProfile,
+  searchUser,
 } = require("../controllers/userController");
 
 const { verifyToken } = require("../middlewares/userMiddlewares");
@@ -26,6 +27,7 @@ router.get("/logout", verifyToken, logOut);
 router.post("/follow-user", verifyToken, followUser);
 router.post("/unfollow-user", verifyToken, unFollowUser);
 router.post("/update-profile", verifyToken, upDateProfile);
+router.get("/search-user", searchUser);
 router.post("/get-user-by-id", getUserById);
 
 //for development purpose only
