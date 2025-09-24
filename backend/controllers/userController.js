@@ -218,9 +218,9 @@ exports.login = async (req, res) => {
 
     res.cookie("access_token", token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       path: "/",
-      sameSite: "lax",
+      sameSite: "none",
     });
 
     // returning success response
