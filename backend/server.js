@@ -15,21 +15,15 @@ const allowedOrigins = [
   "https://blog-app-mu-green.vercel.app",
 ];
 
-// CORS middleware must come before routes
+// ✅ CORS middleware
 app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // explicitly allow these
-    allowedHeaders: ["Content-Type", "Authorization"], // allow headers used in requests
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// Handle preflight requests for all routes
-app.options("*", cors({
-  origin: allowedOrigins,
-  credentials: true,
-}));
 
 app.use(cookieParser());
 app.use(express.json());
@@ -45,5 +39,5 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/reply", replyRoutes);
 
 app.listen(PORT, () => {
-  console.log("server started on port: ", PORT);
+  console.log("server started on port:", PORT);
 });
