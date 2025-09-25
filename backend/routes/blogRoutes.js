@@ -14,6 +14,7 @@ const {
   searchBlogs,
   likeBlog,
   unLikeBlog,
+  deleteBlog,
 } = require("../controllers/blogController");
 
 const { verifyToken, isCreator } = require("../middlewares/userMiddlewares");
@@ -24,6 +25,7 @@ router.get("/get-blog-by-id", getBlogById);
 router.get("/search-blogs", searchBlogs);
 router.post("/like-blog", verifyToken, likeBlog);
 router.post("/unlike-blog", verifyToken, unLikeBlog);
+router.delete("/delete-blog", verifyToken, deleteBlog);
 
 //image uplaod
 router.post("/image", upload.single("image"), async (req, res) => {

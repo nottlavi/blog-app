@@ -69,7 +69,7 @@ exports.getBlogById = async (req, res) => {
     if (!blogEntry) {
       return res.status(400).json({
         success: false,
-        message: "success false",
+        message: " no blog entry found in the db",
       });
     }
 
@@ -210,6 +210,58 @@ exports.unLikeBlog = async (req, res) => {
       success: false,
       message: err.message,
     });
+  }
+};
+
+exports.deleteBlog = async (req, res) => {
+  try {
+    const { blogId } = req.body;
+    const userId = req.user.id;
+
+    if (!blogId) {
+      return res.status(400).json({
+        error: "no blog found",
+      });
+    }
+
+    if(!userId) {
+      return res.status(401).json({
+        error: "not authenticated, no user id found in the controller"
+      })
+    }
+
+    const blog = await blogModel.findById(blogId);
+    //commenting this line to check if its really required
+    // const user = await userModel.findById(userId);
+
+    if(!blog) {
+      return res.status(404).json({
+        error: "no blog found for this blog id"
+      })
+    }
+
+    //checking if blogOwner.id matched with userId (are they the author of the blog?)
+    if(blog.author.toString() !== userId) {
+      return res.status(400).json({
+        error: "you are not authorized to delete this blog"
+      })
+    }
+
+    //removing the blog from the author's entry
+    await userModel.findByIdAndUpdate(userId, {$pull: {blogs: blogId}});
+
+    //finally deleting the blog
+    await blogModel.findByIdAndDelete(blogId);
+
+    //returning success message
+    return res.status(200).json({
+      message: "blog successfully deleted"
+    })
+
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message
+    })
   }
 };
 

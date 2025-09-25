@@ -78,6 +78,7 @@ export const SearchPage = () => {
             );
           }
         })}
+        {searchResults.length === 0 && <div>no search results</div>}
       </div>
     </div>
   );

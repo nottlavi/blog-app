@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -17,6 +17,8 @@ export const BlogPage = () => {
   const [replies, setReplies] = useState([]);
   const token = useSelector((state) => state.auth.token);
   const [liked, setLiked] = useState(false);
+
+  const navigate = useNavigate();
 
   const createReplyHandler = async (e) => {
     e.preventDefault();
@@ -90,6 +92,20 @@ export const BlogPage = () => {
     }
   };
 
+  const deletePostHandler = async () => {
+    try {
+      const res = await axios.delete(
+        `${BASE_URL}/blog/delete-blog`,
+        {withCredentials: true, data: {blogId}}
+      );
+      console.log(res);
+      navigate("/");
+      return;
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
   useEffect(() => {
     const getBlogDetails = async () => {
       try {
@@ -111,7 +127,19 @@ export const BlogPage = () => {
       <ToastContainer />
       {blog ? (
         <>
-          <h1 className="page-title">{blog.blogTitle}</h1>
+          <div className="flex justify-between">
+            <h1 className="page-title">{blog.blogTitle}</h1>
+            {blog.author?._id === profile._id ? (
+              <button
+                className="bg-red-600 rounded-2xl px-2 "
+                onClick={deletePostHandler}
+              >
+                delete
+              </button>
+            ) : (
+              <div> </div>
+            )}
+          </div>
           {/* render rich HTML (images, links, etc.) */}
           <div
             className="prose prose-invert max-w-none"
@@ -135,7 +163,9 @@ export const BlogPage = () => {
                 <BiSolidLike />
               </button>
             ) : (
-              <button onClick={likeHandler}><BiLike /></button>
+              <button onClick={likeHandler}>
+                <BiLike />
+              </button>
             )}
           </div>
         </>
