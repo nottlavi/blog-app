@@ -4,10 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { clearEmail, clearProfile, clearToken } from "../../slices/authSlice";
 import { useDispatch } from "react-redux";
 import { IoSearch } from "react-icons/io5";
+import { Menu, Button, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 import axios from "axios";
 
 export const NavBar = () => {
+  const profile = useSelector((state) => state.auth.profile);
   const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,28 +50,52 @@ export const NavBar = () => {
       <Link to={"/"} className="group">
         <div className="text-xl sm:text-2xl font-semibold tracking-tight">
           <span className="text-white">Blog</span>
-          <span className="text-indigo-400 group-hover:text-indigo-300 transition">App</span>
+          <span className="text-indigo-400 group-hover:text-indigo-300 transition">
+            App
+          </span>
         </div>
       </Link>
 
-      {/* Search icon */}
-      <Link to={"/search"} className="text-gray-300 hover:text-white transition">
-        <div className="p-2 rounded-md hover:bg-gray-800">
-          <IoSearch size={20} />
-        </div>
-      </Link>
+      <div className="flex gap-4 items-center">
+        {/* Search icon */}
+        <Link
+          to={"/search"}
+          className="text-gray-300 hover:text-white transition"
+        >
+          <div className="p-2 rounded-md hover:bg-gray-800">
+            <IoSearch size={20} />
+          </div>
+        </Link>
 
-      {/* Auth buttons */}
-      {token ? (
-        <button onClick={logOutHandler} className="btn-secondary">
-          Log Out
-        </button>
-      ) : (
-        <div className="flex items-center gap-3">
-          <button onClick={logInHandler} className="btn-secondary">Log In</button>
-          <button onClick={signUpHandler} className="btn-primary">Sign Up</button>
-        </div>
-      )}
+        {/* Auth buttons */}
+        {token ? (
+          <div>
+            {/* profile dropdown */}
+            <Menu>
+              <MenuButton as={Button} variant="outline" size="sm">
+                <GiHamburgerMenu />
+              </MenuButton>
+              <MenuList>
+                <Link to={`/user/${profile._id}`}>
+                  <MenuItem>Profile</MenuItem>
+                </Link>
+                <MenuItem>
+                  <button onClick={logOutHandler}>Log Out</button>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <button onClick={logInHandler} className="btn-secondary">
+              Log In
+            </button>
+            <button onClick={signUpHandler} className="btn-primary">
+              Sign Up
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
