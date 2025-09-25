@@ -146,7 +146,7 @@ exports.likeBlog = async (req, res) => {
     const updatedBlogEntry = await blogModel.findByIdAndUpdate(
       blogId,
       {
-        $inc: { likes: 1 },
+        $push: { likes: userId },
       },
       { new: true }
     );
@@ -188,7 +188,7 @@ exports.unLikeBlog = async (req, res) => {
     await blogModel.findByIdAndUpdate(
       blogId,
       {
-        $inc: { likes: -1 },
+        $pull: { likes: userId },
       },
       { new: true }
     );

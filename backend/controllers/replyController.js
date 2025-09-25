@@ -70,11 +70,7 @@ exports.deleteReply = async (req, res) => {
 
     //checking if the user who wants to delete the comment is the one who created it
 
-    console.log(
-      "printing both the user ids here: ",
-      userId,
-      existingReplyEntry.replyOwnerId.toString()
-    );
+  
     if (userId !== existingReplyEntry.replyOwnerId.toString()) {
       return res.status(400).json({
         success: false,

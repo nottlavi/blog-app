@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { toast, ToastContainer } from "react-toastify";
+import { BiSolidLike } from "react-icons/bi";
+import { BiLike } from "react-icons/bi";
 
 export const BlogPage = () => {
   const { blogId } = useParams();
@@ -14,6 +16,7 @@ export const BlogPage = () => {
   const profile = useSelector((state) => state.auth.profile);
   const [replies, setReplies] = useState([]);
   const token = useSelector((state) => state.auth.token);
+  const [liked, setLiked] = useState(false);
 
   const createReplyHandler = async (e) => {
     e.preventDefault();
@@ -95,6 +98,7 @@ export const BlogPage = () => {
         });
         setBlog(res.data.blog);
         setReplies(res.data.blog.replies);
+        setLiked(res.data.blog.likes.includes(profile._id));
       } catch (err) {
         console.log(err.response || "something went wrong");
       }
@@ -123,14 +127,16 @@ export const BlogPage = () => {
           </Link>
           {/* div for likes */}
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-400">likes: {blog.likes}</span>
-            <button onClick={likeHandler} className="btn-primary">
-              Like
-            </button>
-
-            <button onClick={disLikeHandler} className="btn-secondary">
-              Unlike
-            </button>
+            <span className="text-sm text-gray-400">
+              likes: {blog.likes?.length || 0}
+            </span>
+            {liked ? (
+              <button onClick={disLikeHandler}>
+                <BiSolidLike />
+              </button>
+            ) : (
+              <button onClick={likeHandler}><BiLike /></button>
+            )}
           </div>
         </>
       ) : (
