@@ -22,6 +22,7 @@ import { UserPage } from "./pages/UserPage";
 import { SearchPage } from "./pages/SearchPage";
 import { jwtDecode } from "jwt-decode";
 
+
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {

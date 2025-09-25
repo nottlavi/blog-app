@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { setProfile } from "../../../slices/authSlice";
 import { Link } from "react-router-dom";
 import TextEditor from "../../common/TextEditor";
+import PostModal from "./PostModal";
 
 export const CreatorHome = () => {
   //import profile from redux
@@ -15,6 +16,9 @@ export const CreatorHome = () => {
   const [blogDescription, setBlogDescription] = useState("");
   const [blogBody, setBlogBody] = useState("");
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  //useRef for post modal
+  const postModalRef = useRef(null);
 
   // upload image used by the editor's image button
   const uploadImageToServer = async (file) => {
@@ -83,60 +87,23 @@ export const CreatorHome = () => {
   return (
     <div className="space-y-8">
       <div className="text-lg">Welcome {profile.firstName}</div>
-      <div className="text-sm uppercase tracking-wide text-gray-400">your blogs</div>
+      <div className="text-sm uppercase tracking-wide text-gray-400">
+        your blogs
+      </div>
       {/* div for all the blogs by the user */}
       <div className="grid gap-3">
         {userBlogs.map((blog, idx) => {
           return (
             <Link to={`/blog/${blog._id}`} key={idx}>
-              <div className="card p-4 hover:bg-gray-900 transition">{blog.blogTitle}</div>
+              <div className="card p-4 hover:bg-gray-900 transition">
+                {blog.blogTitle}
+              </div>
             </Link>
           );
         })}
       </div>
-      {/* div to create a blog */}
-      <div className="space-y-3">
-        <div className="text-sm uppercase tracking-wide text-gray-400">create a blog</div>
-        <form onSubmit={createBlogHandler} className="card p-6 space-y-4">
-          {/* div for blogTitle */}
-          <div>
-            <label htmlFor="blogTitle" className="label">blog title</label>
-            <input
-              className="input"
-              placeholder="enter blog title"
-              name="blogTitle"
-              id="blogTitle"
-              type="text"
-              value={blogTitle}
-              onChange={(e) => {
-                setBlogTitle(e.target.value);
-              }}
-            />
-          </div>
-          {/* div for blogDescription */}
-          <div>
-            <label htmlFor="blogDescription" className="label">blog description</label>
-            <input
-              className="input"
-              placeholder="enter blog description"
-              name="blogDescription"
-              id="blogDescription"
-              type="text"
-              value={blogDescription}
-              onChange={(e) => {
-                setBlogDescription(e.target.value);
-              }}
-            />
-          </div>
-          {/* div for blogBody (supports inline image upload) */}
-          <TextEditor
-            value={blogBody}
-            onChange={(newValue) => setBlogBody(newValue)}
-            uploadImageToServer={uploadImageToServer}
-          />
-          <button type="submit" className="btn-primary">Publish</button>
-        </form>
-      </div>
+      {/* modal to create a blog */}
+      <PostModal />
     </div>
   );
 };
