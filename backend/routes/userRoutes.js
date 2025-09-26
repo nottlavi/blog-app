@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 const {
   signup,
@@ -26,7 +28,12 @@ router.get("/profile", verifyToken, getProfile);
 router.get("/logout", verifyToken, logOut);
 router.post("/follow-user", verifyToken, followUser);
 router.post("/unfollow-user", verifyToken, unFollowUser);
-router.post("/update-profile", verifyToken, upDateProfile);
+router.post(
+  "/update-profile",
+  upload.single("profilePic"),
+  verifyToken,
+  upDateProfile
+);
 router.get("/search-user", searchUser);
 router.post("/get-user-by-id", getUserById);
 
