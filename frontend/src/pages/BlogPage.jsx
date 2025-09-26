@@ -127,14 +127,14 @@ export const BlogPage = () => {
       <ToastContainer />
       {blog ? (
         <>
-          <div className="flex justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <h1 className="page-title">{blog.blogTitle}</h1>
             {blog.author?._id === profile._id ? (
               <button
-                className="bg-red-600 rounded-2xl px-2 "
+                className="btn-secondary"
                 onClick={deletePostHandler}
               >
-                delete
+                Delete post
               </button>
             ) : (
               <div> </div>
@@ -142,7 +142,7 @@ export const BlogPage = () => {
           </div>
           {/* render rich HTML (images, links, etc.) */}
           <div
-            className="prose prose-invert max-w-none"
+            className="content-body"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(blog.blogBody || ""),
             }}
@@ -159,12 +159,12 @@ export const BlogPage = () => {
               likes: {blog.likes?.length || 0}
             </span>
             {liked ? (
-              <button onClick={disLikeHandler}>
-                <BiSolidLike />
+              <button onClick={disLikeHandler} className="btn-secondary">
+                <span className="inline-flex items-center gap-2"><BiSolidLike /> Unlike</span>
               </button>
             ) : (
-              <button onClick={likeHandler}>
-                <BiLike />
+              <button onClick={likeHandler} className="btn-primary">
+                <span className="inline-flex items-center gap-2"><BiLike /> Like</span>
               </button>
             )}
           </div>

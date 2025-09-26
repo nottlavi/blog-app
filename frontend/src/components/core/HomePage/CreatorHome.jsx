@@ -103,7 +103,9 @@ export const CreatorHome = () => {
         })}
       </div>
       {/* modal to create a blog */}
-      <PostModal />
+      <div>
+        <PostModal />
+      </div>
     </div>
   );
 };

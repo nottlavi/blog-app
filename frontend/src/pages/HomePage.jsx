@@ -36,15 +36,20 @@ export const HomePage = () => {
 
   return (
     <div className="space-y-6">
-      <div>your followed user's blogs</div>
-      {feedPosts ? (
-        feedPosts.map((post, idx) => (
-          <Link to={`/blog/${post._id}`} key={idx}>
-            <div >{post.blogTitle}</div>
-          </Link>
-        ))
+      <h2 className="text-xl font-semibold">Your feed</h2>
+      {Array.isArray(feedPosts) && feedPosts.length > 0 ? (
+        <div className="grid gap-3">
+          {feedPosts.map((post, idx) => (
+            <Link to={`/blog/${post._id}`} key={idx}>
+              <div className="card p-4 hover:bg-gray-900 transition">
+                <div className="font-medium">{post.blogTitle}</div>
+                <div className="text-gray-400 line-clamp-2">{post.blogDescription || ""}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
       ) : (
-        <div></div>
+        <div className="text-gray-400">No posts in your feed yet.</div>
       )}
       {profile?.role === "Creator" && token ? (
         <CreatorHome />

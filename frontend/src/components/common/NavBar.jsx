@@ -57,7 +57,7 @@ export const NavBar = () => {
         </div>
       </Link>
 
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-2 sm:gap-4 items-center">
         {/* Search icon */}
         <Link
           to={"/search"}
@@ -85,7 +85,7 @@ export const NavBar = () => {
             </Menu>
           </div>
         ) : (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button onClick={logInHandler} className="btn-secondary">
               Log In
             </button>

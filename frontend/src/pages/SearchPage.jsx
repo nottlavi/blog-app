@@ -35,6 +35,7 @@ export const SearchPage = () => {
 
   return (
     <div className="space-y-6">
+      <h1 className="page-title">Search</h1>
       {/* div for input search field field */}
       <div className="card p-4 flex flex-col sm:flex-row gap-3 sm:items-center">
         <input
@@ -78,7 +79,9 @@ export const SearchPage = () => {
             );
           }
         })}
-        {searchResults.length === 0 && <div>no search results</div>}
+        {searchResults.length === 0 && (
+          <div className="text-gray-400">No results yet. Try a different query.</div>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import logo from "./logo.svg";
-import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { LogInPage } from "./pages/LogInPage";
 import { SignUpPage } from "./pages/SignUpPage";

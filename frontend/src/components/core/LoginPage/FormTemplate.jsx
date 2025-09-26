@@ -145,7 +145,7 @@ export const FormTemplate = ({ type }) => {
           </button>
         </form>
       ) : (
-        <form onSubmit={signUpHandler} className="card p-6 space-y-4">
+        <form onSubmit={signUpHandler} className="card p-6 space-y-5">
           {/* form for sign up */}
           {/* div for firstName */}
           <div>

@@ -94,8 +94,8 @@ export const OtherProfile = () => {
 
   return (
     <div className="card p-6 space-y-4">
-      <div className="text-lg">
-        This is the profile of {tempProfile.firstName}
+      <div className="text-lg font-medium">
+        {tempProfile.firstName} {tempProfile.lastName}
       </div>
       <div className="text-gray-400">
         followers: {tempProfile.followers?.length}

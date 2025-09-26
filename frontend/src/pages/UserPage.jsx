@@ -19,6 +19,7 @@ export const UserPage = () => {
   return (
     <div className="space-y-6">
       {userId === profile._id ? <SelfProfile /> : <OtherProfile />}
+      <div>your blogs</div>
     </div>
   );
 };

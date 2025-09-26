@@ -79,79 +79,106 @@ export const SelfProfile = () => {
   };
 
   return (
-    <div className=" p-6 flex flex-col">
-      hello {profile.firstName}
-      <Button onClick={onOpen}>Update Profile</Button>
+    <div className="space-y-4">
+      <div className="card p-6 flex items-center gap-4">
+        <img
+          src={profile.profilePic}
+          alt={profile.firstName}
+          className="w-16 h-16 rounded-full object-cover"
+        />
+        <div>
+          <div className="text-lg font-medium">{profile.firstName} {profile.lastName}</div>
+          <div className="text-gray-400 text-sm">{profile.email}</div>
+        </div>
+        <div className="ml-auto">
+          <Button onClick={onOpen}>Update Profile</Button>
+        </div>
+      </div>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Update Profile</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <form className="flex flex-col">
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-
-              <label htmlFor="firstName">First Name:</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                value={firstName}
-                onChange={(e) => {
-                  setFirstName(e.target.value);
-                }}
-              />
-
-              <label htmlFor="lastName">Last Name:</label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                value={lastName}
-                onChange={(e) => {
-                  setLastName(e.target.value);
-                }}
-              />
-
-              <label htmlFor="password">Password:</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-
-              <img
-                src={preview || profile.profilePic}
-                className="rounded-full w-32 h-32"
-              />
-              <button type="button" onClick={() => fileRef.current.click()}>
-                change avatar
-              </button>
-              {preview ? (
-                <button
-                  onClick={() => {
-                    setPreview(null);
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="email" className="label">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
                   }}
-                  type="button"
-                >
-                  delete selected profile pic
-                </button>
-              ) : (
-                <div></div>
-              )}
+                  className="input"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="firstName" className="label">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={firstName}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                  }}
+                  className="input"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="lastName" className="label">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={lastName}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                  }}
+                  className="input"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="label">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  className="input"
+                />
+              </div>
+
+              <div className="flex items-center gap-4">
+                <img
+                  src={preview || profile.profilePic}
+                  className="rounded-full w-20 h-20 object-cover"
+                />
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => fileRef.current.click()} className="btn-secondary">Change avatar</button>
+                  {preview ? (
+                    <button
+                      onClick={() => {
+                        setPreview(null);
+                      }}
+                      type="button"
+                      className="btn-secondary"
+                    >
+                      Remove selected
+                    </button>
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+              </div>
               <input
                 type="file"
                 hidden

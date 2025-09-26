@@ -70,4 +70,33 @@ code {
   .page-title {
     @apply text-3xl font-semibold tracking-tight mb-6;
   }
+
+  /* Rich content rendered from editor (headings, paragraphs, lists, images, links) */
+  .content-body {
+    @apply space-y-4 leading-relaxed;
+  }
+  .content-body h1 {
+    @apply text-3xl font-semibold mt-6;
+  }
+  .content-body h2 {
+    @apply text-2xl font-semibold mt-5;
+  }
+  .content-body h3 {
+    @apply text-xl font-semibold mt-4;
+  }
+  .content-body p {
+    @apply text-gray-200;
+  }
+  .content-body a {
+    @apply text-indigo-400 hover:text-indigo-300 underline;
+  }
+  .content-body ul {
+    @apply list-disc pl-6;
+  }
+  .content-body ol {
+    @apply list-decimal pl-6;
+  }
+  .content-body img {
+    @apply rounded-lg shadow-md my-4;
+  }
 }
