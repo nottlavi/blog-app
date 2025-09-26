@@ -16,6 +16,7 @@ const {
   unFollowUser,
   upDateProfile,
   searchUser,
+  getFoodPosts,
 } = require("../controllers/userController");
 
 const { verifyToken } = require("../middlewares/userMiddlewares");
@@ -36,6 +37,7 @@ router.post(
 );
 router.get("/search-user", searchUser);
 router.post("/get-user-by-id", getUserById);
+router.get("/feed", verifyToken, getFoodPosts);
 
 //for development purpose only
 router.delete("/delete-all-users", deleteAllUsers);

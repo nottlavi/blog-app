@@ -452,7 +452,7 @@ exports.upDateProfile = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "profile successfully updated",
-      data: existingUser
+      data: existingUser,
     });
   } catch (err) {
     return res.status(500).json({
@@ -507,6 +507,37 @@ exports.logOut = async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.getFoodPosts = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await userModel.findById(userId);
+
+    if (!userId) {
+      return res.status(404).json({
+        message: "no userId found from the token",
+      });
+    }
+
+    if (!user) {
+      return res.status(404).json({
+        message: "no user found for this entry in the db",
+      });
+    }
+
+    const followedUsers = user.following;
+    const blogs = await blogModel.find({ author: { $in: followedUsers } });
+
+    return res.status(200).json({
+      blogs: blogs,
+    });
+  } catch (err) {
+    return res.status(500).json({
       message: err.message,
     });
   }
