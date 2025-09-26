@@ -22,7 +22,6 @@ import { BlogPage } from "./pages/BlogPage";
 import { UserPage } from "./pages/UserPage";
 import { SearchPage } from "./pages/SearchPage";
 import { jwtDecode } from "jwt-decode";
-import UpdateProfilePage from "./pages/UpdateProfilePage";
 
 function App() {
   const dispatch = useDispatch();

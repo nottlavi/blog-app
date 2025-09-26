@@ -24,7 +24,7 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/verify-email", verifyEmail);
 router.post("/resend-otp", resendOTP);
-router.post("/profile", verifyToken, getProfile);
+router.get("/profile", verifyToken, getProfile);
 router.get("/logout", verifyToken, logOut);
 router.post("/follow-user", verifyToken, followUser);
 router.post("/unfollow-user", verifyToken, unFollowUser);

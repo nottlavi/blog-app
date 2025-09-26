@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import { setProfile } from "../../../slices/authSlice";
 import {
   Modal,
   ModalOverlay,
@@ -13,12 +14,14 @@ import {
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
 
 export const SelfProfile = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const fileRef = useRef(null);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [preview, setPreview] = useState(null);
+  const dispatch = useDispatch();
 
   // //this will be be used to display info of the current profile being viewed by some other user, no to decide whether to keep this part
   // const {userId} = useParams();
@@ -26,31 +29,54 @@ export const SelfProfile = () => {
 
   //looading imp info from redux, this profile will be used to update the details
   const profile = useSelector((state) => state.auth.profile);
+  const token = useSelector((state) => state.auth.token);
 
-  const [email, setEmail] = useState(profile.email);
-  const [firstName, setFirstName] = useState(profile.firstName);
-  const [lastName, setLastName] = useState(profile.lastName);
+  const [email, setEmail] = useState(profile.email || "");
+  const [firstName, setFirstName] = useState(profile.firstName || "");
+  const [lastName, setLastName] = useState(profile.lastName || "");
   const [password, setPassword] = useState("");
+  const [profilePic, setProfilePic] = useState(profile.profilePic || "");
 
+  const handleUpdate = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/user/update-profile`,
+        {
+          email,
+          firstName,
+          lastName,
+          password,
+          profilePic,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      getProfile();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  //need to decide whether to keep this effect or not, for now i wont keep it
-  // useEffect(() => {
-  //   const getProfile = async () => {
-  //     try {
-  //       const res = await axios.post(
-  //         `${BASE_URL}/user/profile`,
-  //         {
-  //           userId: profile._id,
-  //         },
-  //         { withCredentials: true }
-  //       );
-  //       // console.log(res)
-  //     } catch (err) {
-  //       console.log(err.message);
-  //     }
-  //   };
-  //   getProfile();
-  // }, [profile]);
+  const getProfile = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/user/profile`, {
+        withCredentials: true,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+
+      setEmail(res.data.data.email || "");
+      setFirstName(res.data.data.firstName || "");
+      setLastName(res.data.data.lastName || "");
+      setPassword(""); // never set from backend if sensitive
+      setProfilePic(res.data.data.profilePic || "");
+
+      dispatch(setProfile(res.data.data));
+      localStorage.setItem("profile", JSON.stringify(res.data.data));
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
 
   return (
     <div className=" p-6 flex flex-col">
@@ -64,7 +90,15 @@ export const SelfProfile = () => {
           <ModalBody>
             <form className="flex flex-col">
               <label htmlFor="email">Email:</label>
-              <input type="email" id="email" name="email" value={email} onChange={(e) => {setEmail(e.target.value)}}/>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
 
               <label htmlFor="firstName">First Name:</label>
               <input
@@ -126,14 +160,17 @@ export const SelfProfile = () => {
                   const file = e.target.files[0];
                   if (file) {
                     setPreview(URL.createObjectURL(file));
+                    setProfilePic(URL.createObjectURL(file))
                   }
                 }}
               ></input>
             </form>
           </ModalBody>
 
-          <ModalFooter>
-            <Button variant="ghost">Save</Button>
+          <ModalFooter onClick={onClose}>
+            <Button variant="ghost" onClick={handleUpdate}>
+              Save
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

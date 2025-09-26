@@ -452,7 +452,7 @@ exports.upDateProfile = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "profile successfully updated",
-      profilePic: existingUser.profilePic,
+      data: existingUser
     });
   } catch (err) {
     return res.status(500).json({

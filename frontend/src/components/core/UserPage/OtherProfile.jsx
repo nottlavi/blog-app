@@ -18,7 +18,7 @@ export const OtherProfile = () => {
 
   useEffect(() => {
     refetchCurrentUserProfile();
-  }, [userId]); 
+  }, [userId]);
 
   useEffect(() => {
     setIsFollowing(tempProfile.followers?.includes(profile._id));
@@ -94,12 +94,20 @@ export const OtherProfile = () => {
 
   return (
     <div className="card p-6 space-y-4">
-      <div className="text-lg">This is the profile of {tempProfile.firstName}</div>
-      <div className="text-gray-400">followers: {tempProfile.followers?.length}</div>
+      <div className="text-lg">
+        This is the profile of {tempProfile.firstName}
+      </div>
+      <div className="text-gray-400">
+        followers: {tempProfile.followers?.length}
+      </div>
       {isFollowing ? (
-        <button onClick={unFollowHandler} className="btn-secondary">Unfollow</button>
+        <button onClick={unFollowHandler} className="btn-secondary">
+          Unfollow
+        </button>
       ) : (
-        <button onClick={followHandler} className="btn-primary">Follow</button>
+        <button onClick={followHandler} className="btn-primary">
+          Follow
+        </button>
       )}
     </div>
   );
