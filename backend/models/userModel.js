@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  profilePic: {
+    type: String,
+  },
   blogs: [
     {
       type: mongoose.Schema.Types.ObjectId,

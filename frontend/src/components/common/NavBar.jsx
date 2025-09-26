@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { IoSearch } from "react-icons/io5";
 import { Menu, Button, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { Link as RouterLink } from "react-router-dom";
 
 import axios from "axios";
 
@@ -76,12 +77,10 @@ export const NavBar = () => {
                 <GiHamburgerMenu />
               </MenuButton>
               <MenuList>
-                <Link to={`/user/${profile._id}`}>
-                  <MenuItem>Profile</MenuItem>
-                </Link>
-                <MenuItem>
-                  <button onClick={logOutHandler}>Log Out</button>
+                <MenuItem as={RouterLink} to={`/user/${profile._id}`}>
+                  Profile
                 </MenuItem>
+                <MenuItem onClick={logOutHandler}>Log Out</MenuItem>
               </MenuList>
             </Menu>
           </div>
