@@ -543,6 +543,34 @@ exports.getFoodPosts = async (req, res) => {
   }
 };
 
+exports.getQueryByType = async (req, res) => {
+  try {
+    const { query } = req.params; // or req.params, depending on your route
+    const userId = req.user.id;
+
+    if (!query) {
+      return res.status(400).json({ error: "query not found" });
+    }
+
+    const populateField =
+      query === "Blogs" ? "blogs" : query === "Likes" ? "likes" : "replies";
+
+    const user = await userModel.findById(userId).populate(populateField);
+
+    console.log(user);
+  
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({
+      data: user[populateField],
+    });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 //for development purpose only
 exports.deleteAllUsers = async (req, res) => {
   try {

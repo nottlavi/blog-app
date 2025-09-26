@@ -11,6 +11,7 @@ export const UserPage = () => {
   const token = useSelector((state) => state.auth.token);
   const [tempProfile, setTempProfile] = useState({});
 
+
   //importing BASE_URL from env
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   // this is the user id fetched from the url and the url is derived from BlogPage.jsx
@@ -19,7 +20,7 @@ export const UserPage = () => {
   return (
     <div className="space-y-6">
       {userId === profile._id ? <SelfProfile /> : <OtherProfile />}
-      <div>your blogs</div>
+      
     </div>
   );
 };

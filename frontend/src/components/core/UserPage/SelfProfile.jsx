@@ -36,6 +36,8 @@ export const SelfProfile = () => {
   const [lastName, setLastName] = useState(profile.lastName || "");
   const [password, setPassword] = useState("");
   const [profilePic, setProfilePic] = useState(profile.profilePic || "");
+  const [toDisplay, setToDisplay] = useState("Blogs");
+  const [arrayToShow, setArrayToShow] = useState([]);
 
   const handleUpdate = async () => {
     try {
@@ -78,6 +80,22 @@ export const SelfProfile = () => {
     }
   };
 
+  useEffect(() => {
+    const getDataByType = async () => {
+      try {
+        const res = await axios.get(
+          `${BASE_URL}/user/get-by-query/${toDisplay}`,
+          { withCredentials: true }
+        );
+        console.log(res);
+        setArrayToShow(res.data.data);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+    getDataByType();
+  }, [toDisplay]);
+
   return (
     <div className="space-y-4">
       <div className="card p-6 flex items-center gap-4">
@@ -87,7 +105,9 @@ export const SelfProfile = () => {
           className="w-16 h-16 rounded-full object-cover"
         />
         <div>
-          <div className="text-lg font-medium">{profile.firstName} {profile.lastName}</div>
+          <div className="text-lg font-medium">
+            {profile.firstName} {profile.lastName}
+          </div>
           <div className="text-gray-400 text-sm">{profile.email}</div>
         </div>
         <div className="ml-auto">
@@ -102,7 +122,9 @@ export const SelfProfile = () => {
           <ModalBody>
             <form className="space-y-4">
               <div>
-                <label htmlFor="email" className="label">Email</label>
+                <label htmlFor="email" className="label">
+                  Email
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -116,7 +138,9 @@ export const SelfProfile = () => {
               </div>
 
               <div>
-                <label htmlFor="firstName" className="label">First Name</label>
+                <label htmlFor="firstName" className="label">
+                  First Name
+                </label>
                 <input
                   type="text"
                   id="firstName"
@@ -130,7 +154,9 @@ export const SelfProfile = () => {
               </div>
 
               <div>
-                <label htmlFor="lastName" className="label">Last Name</label>
+                <label htmlFor="lastName" className="label">
+                  Last Name
+                </label>
                 <input
                   type="text"
                   id="lastName"
@@ -144,7 +170,9 @@ export const SelfProfile = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="label">Password</label>
+                <label htmlFor="password" className="label">
+                  Password
+                </label>
                 <input
                   type="password"
                   id="password"
@@ -163,7 +191,13 @@ export const SelfProfile = () => {
                   className="rounded-full w-20 h-20 object-cover"
                 />
                 <div className="flex gap-2">
-                  <button type="button" onClick={() => fileRef.current.click()} className="btn-secondary">Change avatar</button>
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current.click()}
+                    className="btn-secondary"
+                  >
+                    Change avatar
+                  </button>
                   {preview ? (
                     <button
                       onClick={() => {
@@ -201,6 +235,49 @@ export const SelfProfile = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <div className="flex justify-between">
+        <div
+          onClick={() => {
+            setToDisplay("Blogs");
+          }}
+        >
+          your blogs
+        </div>
+        <div
+          onClick={() => {
+            setToDisplay("Likes");
+          }}
+        >
+          your likes
+        </div>
+        <div
+          onClick={() => {
+            setToDisplay("Replies");
+          }}
+        >
+          your replies
+        </div>
+      </div>
+      {/* div to show selected category */}
+      {/* handling cases when user has no activity in selected category */}
+      {toDisplay === "Blogs" && arrayToShow.length === 0 && (
+        <div>post sm maboi</div>
+      )}
+      {toDisplay === "Likes" && arrayToShow.length === 0 && (
+        <div> show some thumbs</div>
+      )}
+      {toDisplay === "Replies" && arrayToShow.length === 0 && (
+        <div> Reply sm</div>
+      )}
+      {toDisplay === "Replies" &&
+        arrayToShow.length !== 0 &&
+        arrayToShow.map((ele, idx) => <div key={idx}>{ele.replyBody}</div>)}
+      {toDisplay === "Blogs" &&
+        arrayToShow.length !== 0 &&
+        arrayToShow.map((ele, idx) => <div key={idx}>{ele.blogTitle}</div>)}
+      {toDisplay === "Likes" &&
+        arrayToShow.length !== 0 &&
+        arrayToShow.map((ele, idx) => <div key={idx}>{ele.blogTitle}</div>)}
     </div>
   );
 };

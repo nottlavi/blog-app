@@ -17,6 +17,7 @@ const {
   upDateProfile,
   searchUser,
   getFoodPosts,
+  getQueryByType,
 } = require("../controllers/userController");
 
 const { verifyToken } = require("../middlewares/userMiddlewares");
@@ -38,6 +39,7 @@ router.post(
 router.get("/search-user", searchUser);
 router.post("/get-user-by-id", getUserById);
 router.get("/feed", verifyToken, getFoodPosts);
+router.get("/get-by-query/:query", verifyToken, getQueryByType);
 
 //for development purpose only
 router.delete("/delete-all-users", deleteAllUsers);
