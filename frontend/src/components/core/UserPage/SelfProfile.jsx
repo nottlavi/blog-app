@@ -52,6 +52,7 @@ export const SelfProfile = () => {
           withCredentials: true,
         }
       );
+
       getProfile();
     } catch (err) {
       console.log(err);
@@ -64,7 +65,6 @@ export const SelfProfile = () => {
         withCredentials: true,
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-
       setEmail(res.data.data.email || "");
       setFirstName(res.data.data.firstName || "");
       setLastName(res.data.data.lastName || "");
@@ -160,7 +160,7 @@ export const SelfProfile = () => {
                   const file = e.target.files[0];
                   if (file) {
                     setPreview(URL.createObjectURL(file));
-                    setProfilePic(URL.createObjectURL(file))
+                    setProfilePic(URL.createObjectURL(file));
                   }
                 }}
               ></input>
