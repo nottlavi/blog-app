@@ -26,7 +26,7 @@ import UpdateProfilePage from "./pages/UpdateProfilePage";
 
 function App() {
   const dispatch = useDispatch();
-  const profile = useSelector((state) => state.auth.profile);
+  const token = useSelector((state) => state.auth.token);
   useEffect(() => {
     //checked it, the token is valid and im getting it
     const token = localStorage.getItem("token");
@@ -70,10 +70,6 @@ function App() {
           <Route path="/blog/:blogId" element={<BlogPage />} />
           <Route path="/user/:userId" element={<UserPage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route
-            path="/update-profile"
-            element={profile ? <UpdateProfilePage /> : <LogInPage />}
-          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
