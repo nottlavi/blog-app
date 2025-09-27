@@ -32,7 +32,7 @@ export const HomePage = () => {
       localStorage.setItem("profile", JSON.stringify(profile));
     }
     getFeedPosts();
-  }, [profile]);
+  }, [profile, token]);
 
   return (
     <div className="space-y-6">

@@ -100,10 +100,8 @@ export const FormTemplate = ({ type }) => {
     <div className="max-w-md mx-auto">
       <ToastContainer />
 
-      {loading ? (
-        <LoadingPage />
-      ) : type === "login" ? (
-        <form onSubmit={logInHandler} className="card p-6 space-y-4">
+      {type === "login" ? (
+        <form onSubmit={logInHandler} className="card p-6 space-y-4 flex items-center flex-col">
           {/* login form */}
           {/* div for email */}
           <div>
@@ -140,9 +138,13 @@ export const FormTemplate = ({ type }) => {
               }}
             />
           </div>
-          <button type="submit" className="btn-primary w-full">
-            Log In
-          </button>
+          {loading ? (
+            <LoadingPage />
+          ) : (
+            <button type="submit" className="btn-primary w-full">
+              Log In
+            </button>
+          )}
         </form>
       ) : (
         <form onSubmit={signUpHandler} className="card p-6 space-y-5">

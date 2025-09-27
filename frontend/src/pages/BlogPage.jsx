@@ -7,6 +7,7 @@ import DOMPurify from "dompurify";
 import { toast, ToastContainer } from "react-toastify";
 import { BiSolidLike } from "react-icons/bi";
 import { BiLike } from "react-icons/bi";
+import { LoadingPage } from "../pages/LoadingPage";
 
 export const BlogPage = () => {
   const { blogId } = useParams();
@@ -17,6 +18,7 @@ export const BlogPage = () => {
   const [replies, setReplies] = useState([]);
   const token = useSelector((state) => state.auth.token);
   const [liked, setLiked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -94,21 +96,22 @@ export const BlogPage = () => {
 
   const deletePostHandler = async () => {
     try {
-      const res = await axios.delete(
-        `${BASE_URL}/blog/delete-blog`,
-        {withCredentials: true, data: {blogId}}
-      );
+      const res = await axios.delete(`${BASE_URL}/blog/delete-blog`, {
+        withCredentials: true,
+        data: { blogId },
+      });
       console.log(res);
       navigate("/");
       return;
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   };
 
   useEffect(() => {
     const getBlogDetails = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(`${BASE_URL}/blog/get-blog-by-id`, {
           params: { blogId: blogId },
         });
@@ -117,23 +120,24 @@ export const BlogPage = () => {
         setLiked(res.data.blog.likes.includes(profile._id));
       } catch (err) {
         console.log(err.response || "something went wrong");
+      } finally {
+        setLoading(false);
       }
     };
     if (blogId) getBlogDetails();
-  }, [blogId, replies]);
+  }, [blogId]);
 
   return (
     <div className="space-y-8">
       <ToastContainer />
-      {blog ? (
+      {loading ? (
+        <LoadingPage />
+      ) : blog ? (
         <>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <h1 className="page-title">{blog.blogTitle}</h1>
             {blog.author?._id === profile._id ? (
-              <button
-                className="btn-secondary"
-                onClick={deletePostHandler}
-              >
+              <button className="btn-secondary" onClick={deletePostHandler}>
                 Delete post
               </button>
             ) : (
@@ -160,11 +164,15 @@ export const BlogPage = () => {
             </span>
             {liked ? (
               <button onClick={disLikeHandler} className="btn-secondary">
-                <span className="inline-flex items-center gap-2"><BiSolidLike /> Unlike</span>
+                <span className="inline-flex items-center gap-2">
+                  <BiSolidLike /> Unlike
+                </span>
               </button>
             ) : (
               <button onClick={likeHandler} className="btn-primary">
-                <span className="inline-flex items-center gap-2"><BiLike /> Like</span>
+                <span className="inline-flex items-center gap-2">
+                  <BiLike /> Like
+                </span>
               </button>
             )}
           </div>
