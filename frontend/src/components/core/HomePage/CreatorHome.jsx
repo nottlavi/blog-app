@@ -87,22 +87,7 @@ export const CreatorHome = () => {
   return (
     <div className="space-y-8">
       <div className="text-lg">Welcome {profile.firstName}</div>
-      <div className="text-sm uppercase tracking-wide text-gray-400">
-        your blogs
-      </div>
-      {/* div for all the blogs by the user */}
-      <div className="grid gap-3">
-        {userBlogs.map((blog, idx) => {
-          return (
-            <Link to={`/blog/${blog._id}`} key={idx}>
-              <div className="card p-4 hover:bg-gray-900 transition">
-                {blog.blogTitle}
-              </div>
-            </Link>
-          );
-        })}
-      </div>
-      {/* modal to create a blog */}
+
       <div>
         <PostModal />
       </div>

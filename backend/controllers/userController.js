@@ -545,8 +545,7 @@ exports.getFoodPosts = async (req, res) => {
 
 exports.getQueryByType = async (req, res) => {
   try {
-    const { query } = req.params; // or req.params, depending on your route
-    const userId = req.user.id;
+    const { userId, query } = req.params;
 
     if (!query) {
       return res.status(400).json({ error: "query not found" });
@@ -558,7 +557,7 @@ exports.getQueryByType = async (req, res) => {
     const user = await userModel.findById(userId).populate(populateField);
 
     console.log(user);
-  
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

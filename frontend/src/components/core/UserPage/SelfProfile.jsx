@@ -84,7 +84,7 @@ export const SelfProfile = () => {
     const getDataByType = async () => {
       try {
         const res = await axios.get(
-          `${BASE_URL}/user/get-by-query/${toDisplay}`,
+          `${BASE_URL}/user/get-by-query/${profile._id}/${toDisplay}`,
           { withCredentials: true }
         );
         console.log(res);
@@ -240,6 +240,7 @@ export const SelfProfile = () => {
           onClick={() => {
             setToDisplay("Blogs");
           }}
+          className="cursor-pointer"
         >
           your blogs
         </div>
@@ -247,6 +248,7 @@ export const SelfProfile = () => {
           onClick={() => {
             setToDisplay("Likes");
           }}
+          className="cursor-pointer"
         >
           your likes
         </div>
@@ -254,6 +256,7 @@ export const SelfProfile = () => {
           onClick={() => {
             setToDisplay("Replies");
           }}
+          className="cursor-pointer"
         >
           your replies
         </div>
@@ -271,10 +274,18 @@ export const SelfProfile = () => {
       )}
       {toDisplay === "Replies" &&
         arrayToShow.length !== 0 &&
-        arrayToShow.map((ele, idx) => <div key={idx}>{ele.replyBody}</div>)}
+        arrayToShow.map((ele, idx) => (
+          <Link to={`/blog/${ele.onBlogId}`}>
+            <div key={idx}>{ele.replyBody}</div>
+          </Link>
+        ))}
       {toDisplay === "Blogs" &&
         arrayToShow.length !== 0 &&
-        arrayToShow.map((ele, idx) => <div key={idx}>{ele.blogTitle}</div>)}
+        arrayToShow.map((ele, idx) => (
+          <Link key={idx} to={`/blog/${ele._id}`}>
+            <div>{ele.blogTitle}</div>
+          </Link>
+        ))}
       {toDisplay === "Likes" &&
         arrayToShow.length !== 0 &&
         arrayToShow.map((ele, idx) => <div key={idx}>{ele.blogTitle}</div>)}
