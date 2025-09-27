@@ -70,7 +70,6 @@ exports.deleteReply = async (req, res) => {
 
     //checking if the user who wants to delete the comment is the one who created it
 
-  
     if (userId !== existingReplyEntry.replyOwnerId.toString()) {
       return res.status(400).json({
         success: false,
@@ -102,6 +101,47 @@ exports.deleteReply = async (req, res) => {
       success: false,
       message: err.message,
     });
+  }
+};
+
+exports.createReplyToAReply = async (req, res) => {
+  try {
+    const { replyId } = req.body;
+    const userId = req.user.id;
+
+    if (!replyId || !userId) {
+      return res.status(400).json({
+        error: "sm is missing",
+      });
+    }
+
+    const replyEntry = await replyModel.findById(replyId);
+
+    if (!replyEntry) {
+      return res.status(400).json({
+        error: "no reply entry found for this reply",
+      });
+    }
+
+    const { replyBody } = req.body;
+
+    const nestedReply = await replyModel.create({
+      replyBody: replyBody,
+      replyTime: Date.now(),
+      replyOwnerId: userId,
+    });
+
+    await replyModel.findByIdAndUpdate(replyId, {
+      $push: { replies: nestedReply._id },
+    });
+
+    return res.status(200).json({
+      data: nestedReply
+    })
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message
+    })
   }
 };
 

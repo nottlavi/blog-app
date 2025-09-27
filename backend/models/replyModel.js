@@ -12,13 +12,18 @@ const replySchema = new mongoose.Schema({
   onBlogId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "blogModel",
-    required: true,
   },
   replyOwnerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "userModel",
     required: true,
   },
+  replies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "replyModel",
+    },
+  ],
 });
 
 const replyModel = mongoose.model("replyModel", replySchema);
