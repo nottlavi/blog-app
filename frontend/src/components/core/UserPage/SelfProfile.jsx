@@ -38,6 +38,7 @@ export const SelfProfile = () => {
   const [profilePic, setProfilePic] = useState(profile.profilePic || "");
   const [toDisplay, setToDisplay] = useState("Blogs");
   const [arrayToShow, setArrayToShow] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleUpdate = async () => {
     try {
@@ -83,6 +84,7 @@ export const SelfProfile = () => {
   useEffect(() => {
     const getDataByType = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(
           `${BASE_URL}/user/get-by-query/${profile._id}/${toDisplay}`,
           { withCredentials: true }
@@ -91,6 +93,8 @@ export const SelfProfile = () => {
         setArrayToShow(res.data.data);
       } catch (err) {
         console.log(err.message);
+      } finally {
+        setLoading(false);
       }
     };
     getDataByType();

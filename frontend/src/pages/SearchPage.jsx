@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import {LoadingPage} from "../pages/LoadingPage";
 
 export const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [searchResults, setSearchResults] = useState([]);
   const [searchTopic, setSearchTopic] = useState("Blogs");
+  const [loading, setLoading] = useState(false);
 
   const searchUsersHandler = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(
         `${BASE_URL}/user/search-user?q=${searchTerm}`
       );
@@ -17,10 +20,14 @@ export const SearchPage = () => {
     } catch (err) {
       console.log(err.response || "something went wrong");
     }
+    finally{
+      setLoading(false);
+    }
   };
 
   const searchHandler = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(
         `${BASE_URL}/blog/search-blogs?q=${searchTerm}`
       );
@@ -31,6 +38,7 @@ export const SearchPage = () => {
     } catch (err) {
       console.log(err.response || "something went wrong");
     }
+    finally{setLoading(false)};
   };
 
   return (
@@ -63,7 +71,7 @@ export const SearchPage = () => {
         )}
       </div>
 
-      <div className="grid gap-3">
+     {loading ?<LoadingPage /> : <div className="grid gap-3">
         {searchResults.map((item, idx) => {
           if (searchTopic === "Blogs") {
             return (
@@ -82,7 +90,7 @@ export const SearchPage = () => {
         {searchResults.length === 0 && (
           <div className="text-gray-400">No results yet. Try a different query.</div>
         )}
-      </div>
+      </div>}
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { ReaderHome } from "../components/core/HomePage/ReaderHome";
 import axios from "axios";
 import { setProfile } from "../slices/authSlice";
 import { Link } from "react-router-dom";
+import {LoadingPage} from "../pages/LoadingPage";
 
 export const HomePage = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -15,15 +16,19 @@ export const HomePage = () => {
   const email = useSelector((state) => state.auth.email);
   const [feedPosts, setFeedPosts] = useState();
   //setting the profile in local storage because redux-store resets to initial state on reload
+  const [loading, setLoading] = useState(false);
 
   const getFeedPosts = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(`${BASE_URL}/user/feed`, {
         withCredentials: true,
       });
       setFeedPosts(res.data.blogs);
     } catch (err) {
       console.log(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,13 +42,17 @@ export const HomePage = () => {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold">Your feed</h2>
-      {Array.isArray(feedPosts) && feedPosts.length > 0 ? (
+      {loading ? (
+        <LoadingPage />
+      ) : Array.isArray(feedPosts) && feedPosts.length > 0 ? (
         <div className="grid gap-3">
           {feedPosts.map((post, idx) => (
             <Link to={`/blog/${post._id}`} key={idx}>
               <div className="card p-4 hover:bg-gray-900 transition">
                 <div className="font-medium">{post.blogTitle}</div>
-                <div className="text-gray-400 line-clamp-2">{post.blogDescription || ""}</div>
+                <div className="text-gray-400 line-clamp-2">
+                  {post.blogDescription || ""}
+                </div>
               </div>
             </Link>
           ))}

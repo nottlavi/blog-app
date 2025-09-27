@@ -24,9 +24,7 @@ import { jwtDecode } from "jwt-decode";
 
 function App() {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
   useEffect(() => {
-    //checked it, the token is valid and im getting it
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
     const profile = JSON.parse(localStorage.getItem("profile"));
