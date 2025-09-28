@@ -23,7 +23,7 @@ export const BlogPage = () => {
   const [loading, setLoading] = useState(false);
   const [nesReplies, setNestedReplies] = useState([]);
   const [nestedReplyBody, setNestedReplyBody] = useState("");
-  const [likeCount, setLikeCount] = useState("");
+  const [likeCount, setLikeCount] = useState(0);
 
   const navigate = useNavigate();
 
@@ -157,9 +157,15 @@ export const BlogPage = () => {
       });
       setBlog(res.data.blog);
       setReplies(res.data.blog.replies);
-      console.log("likes from backend:", res?.data?.blog?.likes);
+      console.log("likes from backend:", res?.data?.blog?.likes.toString());
       console.log("profile id:", profile?._id);
-      setLiked(res?.data?.blog?.likes?.includes(profile?._id));
+      setLiked(
+        res?.data?.blog?.likes?.map(String).includes(String(profile?._id))
+      );
+      console.log(
+        "printing if liked or not",
+        res?.data?.blog?.likes?.includes(profile?._id)
+      );
       setLikeCount(res.data.blog.likes.length);
     } catch (err) {
       console.log(err.response || "something went wrong");
@@ -170,6 +176,7 @@ export const BlogPage = () => {
 
   useEffect(() => {
     if (profile?._id) {
+      console.log("we are reaching here, yes");
       getBlogDetails();
     }
   }, [profile?._id]);
@@ -206,33 +213,28 @@ export const BlogPage = () => {
           </Link>
           {/* div for likes */}
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-400">
-              likes: {likeCount || 0}
-            </span>
             {liked ? (
               <button
                 onClick={disLikeHandler}
-                className="btn-secondary"
+                className=""
                 type="button"
               >
                 <span className="inline-flex items-center gap-2">
-                  <BiSolidLike /> Unlike
+                  <BiSolidLike />
                 </span>
               </button>
             ) : (
               <button
                 onClick={likeHandler}
-                className="btn-primary"
+                className=""
                 type="button"
               >
                 <span className="inline-flex items-center gap-2">
-                  <BiLike /> Like
+                  <BiLike />
                 </span>
               </button>
             )}
-            <button onClick={disLikeHandler}>
-              temp button to dislike to debug
-            </button>
+            <span className="text-sm text-gray-400">{likeCount || 0}</span>
           </div>
         </>
       ) : (

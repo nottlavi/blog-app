@@ -11,7 +11,6 @@ import { BiSolidLike } from "react-icons/bi";
 import { BiLike } from "react-icons/bi";
 import { MdOutlineWatchLater } from "react-icons/md";
 
-
 export const HomePage = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   //below three values were setup on login page
@@ -85,7 +84,7 @@ export const HomePage = () => {
                   e.preventDefault();
                 }}
               >
-                <button>
+                <button >
                   <BiLike />
                 </button>
                 <button>
