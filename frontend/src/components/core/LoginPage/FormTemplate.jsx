@@ -101,10 +101,10 @@ export const FormTemplate = ({ type }) => {
       <ToastContainer />
 
       {type === "login" ? (
-        <form onSubmit={logInHandler} className="card p-6 space-y-4 flex items-center flex-col">
+        <form onSubmit={logInHandler} className="card p-6 space-y-4 flex items-center flex-col ">
           {/* login form */}
           {/* div for email */}
-          <div>
+          <div className="w-full">
             <label htmlFor="email" className="label">
               {" "}
               email{" "}
@@ -122,7 +122,7 @@ export const FormTemplate = ({ type }) => {
             />
           </div>
           {/* div for password */}
-          <div>
+          <div className="w-full">
             <label htmlFor="password" className="label">
               password
             </label>

@@ -215,7 +215,7 @@ exports.login = async (req, res) => {
         lastName: existingUser.lastName,
       },
       jwtSecret,
-      { expiresIn: "2h" }
+      { expiresIn: "10d" }
     );
 
     res.cookie("access_token", token, {

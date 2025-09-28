@@ -29,8 +29,10 @@ function App() {
     const email = localStorage.getItem("email");
     const profile = JSON.parse(localStorage.getItem("profile"));
 
+  
     if (token) {
       const decodedToken = jwtDecode(token);
+
 
       if (decodedToken.exp * 1000 < Date.now()) {
         localStorage.removeItem("token");

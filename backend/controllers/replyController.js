@@ -129,6 +129,7 @@ exports.createReplyToAReply = async (req, res) => {
       replyBody: replyBody,
       replyTime: Date.now(),
       replyOwnerId: userId,
+      onReplyId: replyId,
     });
 
     await replyModel.findByIdAndUpdate(replyId, {
@@ -136,14 +137,40 @@ exports.createReplyToAReply = async (req, res) => {
     });
 
     return res.status(200).json({
-      data: nestedReply
+      data: nestedReply,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
+};
+
+exports.getReplyDetails = async(req, res) => {
+  try {
+    const {replyId} = req.params;
+    if(!replyId) {
+      return res.status(400).json({
+        error: "no reply id fetched"
+      })
+    }
+
+    const replyEntry = await replyModel.findById(replyId).populate("replies");
+    if(!replyEntry) {
+      return res.status(404).json({
+        error: "no reply entry found for this id"
+      })
+    }
+
+    return res.status(200).json({
+      data: replyEntry
     })
   } catch (err) {
     return res.status(500).json({
       error: err.message
     })
   }
-};
+}
 
 //for development purpose only
 exports.deleteAllReplies = async (req, res) => {

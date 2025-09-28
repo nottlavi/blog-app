@@ -13,12 +13,16 @@ export const BlogPage = () => {
   const { blogId } = useParams();
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [blog, setBlog] = useState({});
+  //this state is for managing the input field for a reply
   const [replyBody, setReplyBody] = useState("");
   const profile = useSelector((state) => state.auth.profile);
+  //this state is for setting the replies on a blog, the data is fetched from backend
   const [replies, setReplies] = useState([]);
   const token = useSelector((state) => state.auth.token);
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [nesReplies, setNestedReplies] = useState([]);
+  const [nestedReplyBody, setNestedReplyBody] = useState("");
 
   const navigate = useNavigate();
 
@@ -39,7 +43,7 @@ export const BlogPage = () => {
         }
       );
       if (res) {
-        console.log(res);
+        setReplies((prevReplies) => [res.data.data, ...prevReplies]);
         setReplyBody("");
       }
     } catch (err) {
@@ -62,6 +66,7 @@ export const BlogPage = () => {
       );
       if (res) {
         console.log(res);
+        getBlogDetails();
       }
     } catch (err) {
       console.log(err.response || "something went wrong");
@@ -108,23 +113,56 @@ export const BlogPage = () => {
     }
   };
 
+  const handleNestedReply = async (replyId) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/reply/create-nested`,
+        {
+          replyId: replyId,
+          replyBody: nestedReplyBody,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res);
+      getReplyDetails(res.data.data.onReplyId);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const getReplyDetails = async (replyId) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/reply/get-reply-details/${replyId}`
+      );
+      console.log(res);
+      setNestedReplies(res.data.data.replies);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const getBlogDetails = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${BASE_URL}/blog/get-blog-by-id`, {
+        params: { blogId: blogId },
+      });
+      setBlog(res.data.blog);
+      setReplies(res.data.blog.replies);
+      setLiked(res.data.blog.likes.includes(profile._id));
+    } catch (err) {
+      console.log(err.response || "something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+  // if (blogId) getBlogDetails();
+
   useEffect(() => {
-    const getBlogDetails = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get(`${BASE_URL}/blog/get-blog-by-id`, {
-          params: { blogId: blogId },
-        });
-        setBlog(res.data.blog);
-        setReplies(res.data.blog.replies);
-        setLiked(res.data.blog.likes.includes(profile._id));
-      } catch (err) {
-        console.log(err.response || "something went wrong");
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (blogId) getBlogDetails();
+    getBlogDetails();
   }, [blogId]);
 
   return (
@@ -196,7 +234,10 @@ export const BlogPage = () => {
               }}
             />
           </div>
-          <button type="submit" className="btn-primary">
+          <button
+            type="submit"
+            className="btn-primary"
+          >
             Submit reply
           </button>
         </form>
@@ -231,6 +272,41 @@ export const BlogPage = () => {
                 ) : (
                   <div></div>
                 )}
+                {/* div for input and label for nested reply */}
+                <div>
+                  <label htmlFor="nestedReply">enter reply</label>
+                  <input
+                    name="nestedReply"
+                    id="nestedReply"
+                    value={nestedReplyBody}
+                    onChange={(e) => {
+                      setNestedReplyBody(e.target.value);
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      handleNestedReply(reply._id);
+                    }}
+                  >
+                    submit
+                  </button>
+                </div>
+                {/* icon/button/option to show all the nested replies on this reply */}
+                <div>
+                  <button
+                    onClick={() => {
+                      getReplyDetails(reply._id);
+                    }}
+                  >
+                    fetch replies!
+                  </button>
+                </div>
+                {/* i will be showing all the nestedReplies here */}
+                <div>
+                  {nesReplies.map((nestedReply, idx) => {
+                    return <div key={idx}>{nestedReply.replyBody}</div>;
+                  })}
+                </div>
               </div>
             </div>
           );

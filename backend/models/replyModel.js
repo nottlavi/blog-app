@@ -18,6 +18,10 @@ const replySchema = new mongoose.Schema({
     ref: "userModel",
     required: true,
   },
+  onReplyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "replyModel",
+  },
   replies: [
     {
       type: mongoose.Schema.Types.ObjectId,

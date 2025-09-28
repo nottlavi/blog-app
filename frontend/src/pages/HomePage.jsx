@@ -6,7 +6,7 @@ import { ReaderHome } from "../components/core/HomePage/ReaderHome";
 import axios from "axios";
 import { setProfile } from "../slices/authSlice";
 import { Link } from "react-router-dom";
-import {LoadingPage} from "../pages/LoadingPage";
+import { LoadingPage } from "../pages/LoadingPage";
 
 export const HomePage = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -22,6 +22,9 @@ export const HomePage = () => {
     try {
       setLoading(true);
       const res = await axios.get(`${BASE_URL}/user/feed`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         withCredentials: true,
       });
       setFeedPosts(res.data.blogs);

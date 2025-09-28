@@ -6,12 +6,14 @@ const {
   deleteReply,
   deleteAllReplies,
   createReplyToAReply,
+  getReplyDetails,
 } = require("../controllers/replyController");
 const { verifyToken } = require("../middlewares/userMiddlewares");
 
 router.post("/create-reply", verifyToken, createReply);
 router.post("/delete-reply", verifyToken, deleteReply);
 router.post("/create-nested", verifyToken, createReplyToAReply);
+router.get("/get-reply-details/:replyId", getReplyDetails);
 
 //for development purpose only
 router.delete("/delete-all-replies", deleteAllReplies);
