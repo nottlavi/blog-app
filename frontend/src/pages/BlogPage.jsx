@@ -23,6 +23,7 @@ export const BlogPage = () => {
   const [loading, setLoading] = useState(false);
   const [nesReplies, setNestedReplies] = useState([]);
   const [nestedReplyBody, setNestedReplyBody] = useState("");
+  const [likeCount, setLikeCount] = useState("");
 
   const navigate = useNavigate();
 
@@ -81,6 +82,8 @@ export const BlogPage = () => {
         { withCredentials: true }
       );
       console.log(res);
+      setLiked(true);
+      setLikeCount((prev) => prev + 1);
     } catch (err) {
       console.log(err.response || "something went wrong");
       toast.error(err.response.data.message);
@@ -94,6 +97,8 @@ export const BlogPage = () => {
         { blogId },
         { withCredentials: true }
       );
+      setLiked(false);
+      setLikeCount((prev) => prev - 1);
     } catch (err) {
       console.log(err.response || "something went wrong");
     }
@@ -152,18 +157,22 @@ export const BlogPage = () => {
       });
       setBlog(res.data.blog);
       setReplies(res.data.blog.replies);
-      setLiked(res.data.blog.likes.includes(profile._id));
+      console.log("likes from backend:", res?.data?.blog?.likes);
+      console.log("profile id:", profile?._id);
+      setLiked(res?.data?.blog?.likes?.includes(profile?._id));
+      setLikeCount(res.data.blog.likes.length);
     } catch (err) {
       console.log(err.response || "something went wrong");
     } finally {
       setLoading(false);
     }
   };
-  // if (blogId) getBlogDetails();
 
   useEffect(() => {
-    getBlogDetails();
-  }, [blogId]);
+    if (profile?._id) {
+      getBlogDetails();
+    }
+  }, [profile?._id]);
 
   return (
     <div className="space-y-8">
@@ -198,21 +207,32 @@ export const BlogPage = () => {
           {/* div for likes */}
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-400">
-              likes: {blog.likes?.length || 0}
+              likes: {likeCount || 0}
             </span>
             {liked ? (
-              <button onClick={disLikeHandler} className="btn-secondary">
+              <button
+                onClick={disLikeHandler}
+                className="btn-secondary"
+                type="button"
+              >
                 <span className="inline-flex items-center gap-2">
                   <BiSolidLike /> Unlike
                 </span>
               </button>
             ) : (
-              <button onClick={likeHandler} className="btn-primary">
+              <button
+                onClick={likeHandler}
+                className="btn-primary"
+                type="button"
+              >
                 <span className="inline-flex items-center gap-2">
                   <BiLike /> Like
                 </span>
               </button>
             )}
+            <button onClick={disLikeHandler}>
+              temp button to dislike to debug
+            </button>
           </div>
         </>
       ) : (
@@ -234,10 +254,7 @@ export const BlogPage = () => {
               }}
             />
           </div>
-          <button
-            type="submit"
-            className="btn-primary"
-          >
+          <button type="submit" className="btn-primary">
             Submit reply
           </button>
         </form>

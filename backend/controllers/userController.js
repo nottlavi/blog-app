@@ -531,7 +531,9 @@ exports.getFoodPosts = async (req, res) => {
     }
 
     const followedUsers = user.following;
-    const blogs = await blogModel.find({ author: { $in: followedUsers } });
+    const blogs = await blogModel
+      .find({ author: { $in: followedUsers } })
+      .populate("author");
 
     return res.status(200).json({
       blogs: blogs,
