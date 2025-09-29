@@ -292,7 +292,11 @@ export const SelfProfile = () => {
         ))}
       {toDisplay === "Likes" &&
         arrayToShow.length !== 0 &&
-        arrayToShow.map((ele, idx) => <div key={idx}>{ele.blogTitle}</div>)}
+        arrayToShow.map((ele, idx) => (
+          <Link to={`/blog/${ele._id}`}>
+            <div key={idx}>{ele.blogTitle}</div>
+          </Link>
+        ))}
     </div>
   );
 };

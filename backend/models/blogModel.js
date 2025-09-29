@@ -36,6 +36,10 @@ const blogSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  savedForLater: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "userModel",
+  },
 });
 
 const blogModel = mongoose.model("blogModel", blogSchema);

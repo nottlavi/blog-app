@@ -157,14 +157,8 @@ export const BlogPage = () => {
       });
       setBlog(res.data.blog);
       setReplies(res.data.blog.replies);
-      console.log("likes from backend:", res?.data?.blog?.likes.toString());
-      console.log("profile id:", profile?._id);
       setLiked(
         res?.data?.blog?.likes?.map(String).includes(String(profile?._id))
-      );
-      console.log(
-        "printing if liked or not",
-        res?.data?.blog?.likes?.includes(profile?._id)
       );
       setLikeCount(res.data.blog.likes.length);
     } catch (err) {
@@ -176,7 +170,6 @@ export const BlogPage = () => {
 
   useEffect(() => {
     if (profile?._id) {
-      console.log("we are reaching here, yes");
       getBlogDetails();
     }
   }, [profile?._id]);
@@ -214,21 +207,13 @@ export const BlogPage = () => {
           {/* div for likes */}
           <div className="flex items-center gap-3">
             {liked ? (
-              <button
-                onClick={disLikeHandler}
-                className=""
-                type="button"
-              >
+              <button onClick={disLikeHandler} className="" type="button">
                 <span className="inline-flex items-center gap-2">
                   <BiSolidLike />
                 </span>
               </button>
             ) : (
-              <button
-                onClick={likeHandler}
-                className=""
-                type="button"
-              >
+              <button onClick={likeHandler} className="" type="button">
                 <span className="inline-flex items-center gap-2">
                   <BiLike />
                 </span>

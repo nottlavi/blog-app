@@ -38,6 +38,19 @@ export const HomePage = () => {
     }
   };
 
+  const likeHandler = async (blogId) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/blog/like-blog`,
+        { blogId },
+        { withCredentials: true }
+      );
+      console.log(res);
+    } catch (err) {
+      console.log(err.response || "something went wrong");
+    }
+  };
+
   useEffect(() => {
     if (profile && profile._id) {
       localStorage.setItem("profile", JSON.stringify(profile));
@@ -76,20 +89,18 @@ export const HomePage = () => {
                     ? post.blogBody
                     : post.blogBody.slice(0, 300) + "..."}
                 </div>
-              </div>
-              {/* div to show the actions menu */}
-              <div
-                className="card flex gap-4 p-3 px-4 mt-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                <button >
-                  <BiLike />
-                </button>
-                <button>
-                  <MdOutlineWatchLater />
-                </button>
+                {/* div to show the actions menu */}
+                <div className="card flex gap-4 p-3 px-4 mt-2">
+                  {post.likes.includes(profile?._id) ? (
+                    <button>
+                      <BiSolidLike />
+                    </button>
+                  ) : (
+                    <button>
+                      <BiLike />
+                    </button>
+                  )}
+                </div>
               </div>
             </Link>
           ))}
